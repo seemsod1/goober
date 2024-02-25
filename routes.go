@@ -16,6 +16,9 @@ func routes() http.Handler {
 
 	mux.Get("/", controllers.HomePage)
 	mux.Get("/about", controllers.About)
+	mux.Get("/cars", controllers.CarsPage)
 
+	fileServer := http.FileServer(http.Dir("./resources/"))
+	mux.Handle("/resources/*", http.StripPrefix("/resources", fileServer))
 	return mux
 }

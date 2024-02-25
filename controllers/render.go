@@ -18,7 +18,7 @@ func SetAppForTemplate(a *models.AppConfig) {
 }
 
 // renderTemplate is a function that renders a template
-func renderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func renderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
 	tc := app.TemplateCache
 
 	if app.UseCache {
@@ -37,7 +37,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 
 	_ = t.Execute(buf, td)
 
-	td = initializers.AddDefaultData(td)
+	td = initializers.AddDefaultData(td, r)
 
 	_, err := buf.WriteTo(w)
 	if err != nil {

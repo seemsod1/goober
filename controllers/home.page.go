@@ -9,7 +9,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	remoteIP := r.RemoteAddr
 	app.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	renderTemplate(w, "home.page.tmpl", &models.TemplateData{})
+	renderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 func About(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +19,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 	remoteIp := app.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = remoteIp
 
-	renderTemplate(w, "about.page.tmpl", &models.TemplateData{
+	renderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }

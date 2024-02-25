@@ -14,15 +14,15 @@ import (
 
 func init() {
 	initializers.LoadConfig()
-	initializers.ConnectToDatabase()
-	initializers.SyncDB()
 }
 
 var app models.AppConfig
 var session *scs.SessionManager
 
 func main() {
-
+	app.DB = initializers.ConnectToDatabase()
+	initializers.SyncDB(app.DB)
+	//initializers.Migration(app.DB)
 	//Production
 	app.InProduction = false
 
