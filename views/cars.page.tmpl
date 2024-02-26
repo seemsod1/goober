@@ -106,9 +106,9 @@
                                 <h2 class="accordion-header" role="tab" id="passengers"><button class="accordion-button collapsed fs-5 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#toggleAlternative .item-2" aria-expanded="false" aria-controls="toggleAlternative .item-2">Passengers</button></h2>
                                 <div class="accordion-collapse collapse item-2 bg-light" role="tabpanel" data-bs-parent="#toggleAlternative" aria-labelledby="passengers">
                                     <div class="accordion-body">
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="oneTo2" name="passengers"><label class="form-check-label fs-6 d-block" for="oneTo2">1 to 2 passengers<small class="text-muted float-end">45</small></label></div>
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="threeTo5" name="passengers"><label class="form-check-label fs-6 d-block" for="threeTo5">3 to 4 passengers<small class="text-muted float-end">45</small></label></div>
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="fiveOrMore" name="passengers"><label class="form-check-label fs-6 d-block" for="fiveOrMore">6 or more<small class="text-muted float-end">45</small></label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="oneTo2p" name="passengers"><label class="form-check-label fs-6 d-block" for="oneTo2p">1 to 2 passengers<small class="text-muted float-end"></small></label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="threeTo4p" name="passengers"><label class="form-check-label fs-6 d-block" for="threeTo4p">3 to 4 passengers<small class="text-muted float-end">45</small></label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="fiveOrMorep" name="passengers"><label class="form-check-label fs-6 d-block" for="fiveOrMorep">5 or more<small class="text-muted float-end">45</small></label></div>
                                     </div>
                                 </div>
                             </div>
@@ -116,9 +116,9 @@
                                 <h2 class="accordion-header" role="tab" id="bags"><button class="accordion-button collapsed fs-5 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#toggleAlternative .item-3" aria-expanded="false" aria-controls="toggleAlternative .item-3" aria-labelledby="bags">Bags</button></h2>
                                 <div class="accordion-collapse collapse item-3 bg-light" role="tabpanel" data-bs-parent="#toggleAlternative">
                                     <div class="accordion-body">
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="1To2" name="bags"><label class="form-check-label fs-6 d-block" for="1To2">1 to 2 bags<small class="text-muted float-end">45</small></label></div>
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="threeTo4" name="bags"><label class="form-check-label fs-6 d-block" for="threeTo4">3 to 4 bags<small class="text-muted float-end">45</small></label></div>
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="fiveOrMore" name="bags"><label class="form-check-label fs-6 d-block" for="fiveOrMore">5 or more<small class="text-muted float-end">45</small></label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="oneTo2b" name="bags"><label class="form-check-label fs-6 d-block" for="oneTo2b">1 to 2 bags<small class="text-muted float-end" id>45</small></label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="threeTo4b" name="bags"><label class="form-check-label fs-6 d-block" for="threeTo4b">3 to 4 bags<small class="text-muted float-end">45</small></label></div>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="fiveOrMoreb" name="bags"><label class="form-check-label fs-6 d-block" for="fiveOrMoreb">5 or more<small class="text-muted float-end">45</small></label></div>
                                     </div>
                                 </div>
                             </div>
@@ -272,30 +272,114 @@
             var carCount = carsData.length;
             document.getElementById('carCount').textContent = carCount;
             document.getElementById('carsCountCity').textContent = "All Cities: ";
-            carsData.forEach(function(car) {
-                var typeId = car.Type.ID;
-                typeCounts[typeId] = (typeCounts[typeId] || 0) + 1;
-            });
-            typesData.forEach(function(type) {
-                var typeId = type.ID;
-                var count = typeCounts[typeId] || 0;
+
+            function updatePassengerOptions(carsData) {
+                var oneTo2 = 0;
+                var threeTo4 = 0;
+                var fiveOrMore = 0;
+
+                carsData.forEach(function(car) {
+                    var passengers = car.Passengers;
+
+                    if (passengers >= 1 && passengers <= 2) {
+                        oneTo2++;
+                    } else if (passengers >= 3 && passengers <= 4) {
+                        threeTo4++;
+                    } else if (passengers >= 5) {
+                        fiveOrMore++;
+                    }
+                });
+
+                var oneTo2p = document.getElementById('oneTo2p');
+                var label1 = oneTo2p.nextElementSibling;
+                label1.innerHTML = '1 to 2 passengers' + '<small class="text-muted float-end">' + oneTo2 + '</small>';
+                oneTo2p.value = oneTo2;
+                oneTo2p.disabled = (oneTo2 === 0);
+
+                var threeTo4p = document.getElementById('threeTo4p');
+                var label2 = threeTo4p.nextElementSibling;
+                label2.innerHTML = '3 to 4 passengers' + '<small class="text-muted float-end">' + threeTo4 + '</small>';
+                threeTo4p.value = threeTo4;
+                threeTo4p.disabled = (threeTo4 === 0);
+
+                var fiveOrMorep = document.getElementById('fiveOrMorep');
+                var label3 = fiveOrMorep.nextElementSibling;
+                label3.innerHTML = '5 or more passengers' + '<small class="text-muted float-end">' + fiveOrMore + '</small>';
+                fiveOrMorep.value = fiveOrMore;
+                fiveOrMorep.disabled = (fiveOrMore === 0);
+            }
+            updatePassengerOptions(carsData);
+
+            function updateCheckboxesWithAssignments(carsData) {
+                var typeCounts = {};
 
 
-                var checkbox = document.getElementById(type.Name.toLowerCase());
+                carsData.forEach(function(car) {
+                    var typeId = car.Type.ID;
+                    typeCounts[typeId] = (typeCounts[typeId] || 0) + 1;
+                });
 
-                var label = checkbox.nextElementSibling;
-                label.innerHTML = type.Name + '<small class="text-muted float-end">' + count + '</small>';
+                typesData.forEach(function(type) {
+                    var typeId = type.ID;
+                    var count = typeCounts[typeId] || 0;
 
-                checkbox.value = count;
+                    var checkbox = document.getElementById(type.Name.toLowerCase());
+                    var label = checkbox.nextElementSibling;
 
-                if (count === 0) {
-                    checkbox.disabled = true;
-                    label.classList.add('text-muted');
-                } else {
-                    checkbox.disabled = false;
-                    label.classList.remove('text-muted');
-                }
-            });
+                    label.innerHTML = type.Name + '<small class="text-muted float-end">' + count + '</small>';
+                    checkbox.value = count;
+
+                    if (count === 0) {
+                        checkbox.disabled = true;
+                        label.classList.add('text-muted');
+                    } else {
+                        checkbox.disabled = false;
+                        label.classList.remove('text-muted');
+                    }
+                });
+            }
+            updateCheckboxesWithAssignments(carsData);
+
+            function updateBagsOptions(carsData) {
+                var oneTo2 = 0;
+                var threeTo4 = 0;
+                var fiveOrMore = 0;
+
+                carsData.forEach(function(car) {
+                    var bags = car.Bags;
+
+                    if (bags >= 1 && bags <= 2) {
+                        oneTo2++;
+                    } else if (bags >= 3 && bags <= 4) {
+                        threeTo4++;
+                    } else if (bags >= 5) {
+                        fiveOrMore++;
+                    }
+                });
+
+                var oneTo2b = document.getElementById('oneTo2b');
+                var label1 = oneTo2b.nextElementSibling;
+                label1.innerHTML = '1 to 2 bags' + '<small class="text-muted float-end">' + oneTo2 + '</small>';
+                oneTo2b.value = oneTo2;
+                oneTo2b.disabled = (oneTo2 === 0);
+
+                var threeTo4b = document.getElementById('threeTo4b');
+                var label2 = threeTo4b.nextElementSibling;
+                label2.innerHTML = '3 to 4 bags' + '<small class="text-muted float-end">' + threeTo4 + '</small>';
+                threeTo4b.value = threeTo4;
+                threeTo4b.disabled = (threeTo4 === 0);
+
+                var fiveOrMoreb = document.getElementById('fiveOrMoreb');
+                var label3 = fiveOrMoreb.nextElementSibling;
+                label3.innerHTML = '5 or more bags' + '<small class="text-muted float-end">' + fiveOrMore + '</small>';
+                fiveOrMoreb.value = fiveOrMore;
+                fiveOrMoreb.disabled = (fiveOrMore === 0);
+            }
+            updateBagsOptions(carsData);
+
+
+
+
 
             function findMinMaxPrices() {
                 let minPrice = Number.MAX_VALUE;
@@ -451,74 +535,73 @@
 
 
             setInitialButtonColor();
-        });
 
-        document.getElementById('bookingCars').addEventListener('submit', async function(event) {
-            event.preventDefault();
+            document.getElementById('bookingCars').addEventListener('submit', async function(event) {
+                event.preventDefault();
 
-            var carsData = {{ .Data.Cars | jsonify }};
+                var carsData = {{ .Data.Cars | jsonify }};
+                if (!validateForm()) {
+                    return;
+                }
 
-            if (!validateForm()) {
-                return;
-            }
+                var city = document.getElementById('citySearchInput').value.trim();
 
-            var city = document.getElementById('citySearchInput').value.trim();
+                var filteredCars = carsData.filter(function(car) {
+                    return car.Location.City.Name === city;
+                });
 
-            var filteredCars = carsData.filter(function(car) {
-                return car.Location.City.Name === city;
+                renderFilteredCars(filteredCars);
+
+                updateCheckboxesWithAssignments(filteredCars);
+                updatePassengerOptions(filteredCars);
+
+                document.getElementById('carCount').textContent = filteredCars.length;
+                document.getElementById('carsCountCity').textContent = city + ': ';
+
+
+                return false;
             });
 
-            renderFilteredCars(filteredCars);
+            function validateForm() {
+                var isValid = true;
 
-            document.getElementById('carCount').textContent = filteredCars.length;
-            document.getElementById('carsCountCity').textContent = city + ': ';
+                var citySearchInput = document.getElementById('citySearchInput');
+                var citySelected = citySearchInput.value.trim() !== '';
+                if (!citySelected) {
+                    isValid = false;
+                    citySearchInput.classList.add('is-invalid');
+                } else {
+                    citySearchInput.classList.remove('is-invalid');
+                }
+
+                var carsPickup = document.getElementById('carsPickup').value.trim();
+                var carsDropoff = document.getElementById('carsDropoff').value.trim();
+                if (!carsPickup) {
+                    isValid = false;
+                    document.getElementById('carsPickup').classList.add('is-invalid');
+                } else {
+                    document.getElementById('carsPickup').classList.remove('is-invalid');
+                }
+                if (!carsDropoff) {
+                    isValid = false;
+                    document.getElementById('carsDropoff').classList.add('is-invalid');
+                } else {
+                    document.getElementById('carsDropoff').classList.remove('is-invalid');
+                }
 
 
-            return false;
-        });
-
-        function validateForm() {
-            var isValid = true;
-
-            var citySearchInput = document.getElementById('citySearchInput');
-            var citySelected = citySearchInput.value.trim() !== '';
-            if (!citySelected) {
-                isValid = false;
-                citySearchInput.classList.add('is-invalid');
-            } else {
-                citySearchInput.classList.remove('is-invalid');
+                return isValid;
             }
 
-            var carsPickup = document.getElementById('carsPickup').value.trim();
-            var carsDropoff = document.getElementById('carsDropoff').value.trim();
-            if (!carsPickup) {
-                isValid = false;
-                document.getElementById('carsPickup').classList.add('is-invalid');
-            } else {
-                document.getElementById('carsPickup').classList.remove('is-invalid');
-            }
-            if (!carsDropoff) {
-                isValid = false;
-                document.getElementById('carsDropoff').classList.add('is-invalid');
-            } else {
-                document.getElementById('carsDropoff').classList.remove('is-invalid');
-            }
+            function renderFilteredCars(filteredCars) {
+                var carListContainer = document.querySelector('.car-list');
+                carListContainer.innerHTML = '';
 
+                filteredCars.forEach(function(car) {
+                    var carItem = document.createElement('div');
+                    carItem.classList.add('car-item', 'bg-light', 'shadow-md', 'rounded', 'p-3', 'mb-3');
 
-            return isValid;
-        }
-
-        function renderFilteredCars(filteredCars) {
-            var carListContainer = document.querySelector('.car-list');
-            carListContainer.innerHTML = ''; // Clear previous content
-
-            // Render filtered cars
-            filteredCars.forEach(function(car) {
-                var carItem = document.createElement('div');
-                carItem.classList.add('car-item', 'bg-light', 'shadow-md', 'rounded', 'p-3', 'mb-3');
-
-                // Populate car item HTML content (you can customize this based on your needs)
-                carItem.innerHTML = `
+                    carItem.innerHTML = `
             <div class="row">
                 <div class="col-md-4">
                     <img class="img-fluid rounded align-top" src="/resources/img/cars/${car.Model.Name}.png" alt="Car">
@@ -550,23 +633,23 @@
         ${car.Assignments.map(assignment => `
             <div class="col-sm-3 col-md-auto d-flex justify-content-center" data-bs-toggle="tooltip" title="" data-bs-original-title="">
                 ${assignment.Purpose.Name === "Family" ?
-                    `<span class="badge text-bg-secondary"><i class="fas fa-group"></i> ${assignment.Purpose.Name}</span>` :
-                    assignment.Purpose.Name === "Business" ?
-                        `<span class="badge text-bg-secondary"><i class="fas fa-briefcase"></i> ${assignment.Purpose.Name}</span>` :
-                        assignment.Purpose.Name === "City" ?
-                            `<span class="badge text-bg-secondary"><i class="fas fa-city"></i> ${assignment.Purpose.Name}</span>` :
-                            assignment.Purpose.Name === "Off-road" ?
-                                `<span class="badge text-bg-secondary"><i class="fas fa-mountain"></i> ${assignment.Purpose.Name}</span>` :
-                                assignment.Purpose.Name === "Sport" ?
-                                    `<span class="badge text bg-secondary"><i class="fas fa-futbol"></i> ${assignment.Purpose.Name}</span>` :
-                                    assignment.Purpose.Name === "Luxury" ?
-                                        `<span class="badge text bg-secondary"><i class="fas fa-gem"></i> ${assignment.Purpose.Name}</span>` :
-                                        assignment.Purpose.Name === "Economy" ?
-                                            `<span class="badge text bg-secondary"><i class="fas fa-coins"></i> ${assignment.Purpose.Name}</span>` :
-                                            assignment.Purpose.Name === "Premium" ?
-                                                `<span class="badge text bg-secondary"><i class="fas fa-crown"></i> ${assignment.Purpose.Name}</span>` :
-                                                `<span class="badge text bg-secondary"><i class="fas fa-car"></i> ${assignment.Purpose.Name}</span>`
-                }
+                        `<span class="badge text-bg-secondary"><i class="fas fa-group"></i> ${assignment.Purpose.Name}</span>` :
+                        assignment.Purpose.Name === "Business" ?
+                            `<span class="badge text-bg-secondary"><i class="fas fa-briefcase"></i> ${assignment.Purpose.Name}</span>` :
+                            assignment.Purpose.Name === "City" ?
+                                `<span class="badge text-bg-secondary"><i class="fas fa-city"></i> ${assignment.Purpose.Name}</span>` :
+                                assignment.Purpose.Name === "Off-road" ?
+                                    `<span class="badge text-bg-secondary"><i class="fas fa-mountain"></i> ${assignment.Purpose.Name}</span>` :
+                                    assignment.Purpose.Name === "Sport" ?
+                                        `<span class="badge text bg-secondary"><i class="fas fa-futbol"></i> ${assignment.Purpose.Name}</span>` :
+                                        assignment.Purpose.Name === "Luxury" ?
+                                            `<span class="badge text bg-secondary"><i class="fas fa-gem"></i> ${assignment.Purpose.Name}</span>` :
+                                            assignment.Purpose.Name === "Economy" ?
+                                                `<span class="badge text bg-secondary"><i class="fas fa-coins"></i> ${assignment.Purpose.Name}</span>` :
+                                                assignment.Purpose.Name === "Premium" ?
+                                                    `<span class="badge text bg-secondary"><i class="fas fa-crown"></i> ${assignment.Purpose.Name}</span>` :
+                                                    `<span class="badge text bg-secondary"><i class="fas fa-car"></i> ${assignment.Purpose.Name}</span>`
+                    }
             </div>
         `).join('')}
     </div>
@@ -584,9 +667,13 @@
             </div>
             `;
 
-                carListContainer.appendChild(carItem);
-            });
-        }
+                    carListContainer.appendChild(carItem);
+                });
+            }
+
+
+
+        });
 
 
 
