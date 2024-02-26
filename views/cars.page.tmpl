@@ -473,9 +473,13 @@
             function updateButtonColor() {
                 if (cityDropdownButton.classList.contains('has-city-selected')) {
                     cityDropdownButton.classList.remove('btn-danger');
+                    cityDropdownButton.classList.remove('btn-dark');
+                    cityDropdownButton.classList.remove('btn-secondary');
                     cityDropdownButton.classList.add('btn-success');
                 } else {
                     cityDropdownButton.classList.remove('btn-success');
+                    cityDropdownButton.classList.remove('btn-dark');
+                    cityDropdownButton.classList.remove('btn-secondary');
                     cityDropdownButton.classList.add('btn-danger');
                 }
             }
@@ -496,12 +500,16 @@
                 if (isValidCity) {
                     cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> ' + enteredCity;
                     cityDropdownButton.classList.add('has-city-selected');
+                    cityDropdownButton.classList.remove('invalid-city');
                     updateButtonColor();
                 } else {
                     cityDropdownButton.classList.remove('has-city-selected');
                     cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> Select City';
+                    cityDropdownButton.classList.add('invalid-city');
                     updateButtonColor();
                 }
+
+                return isValidCity;
             }
 
             citySearchInput.addEventListener('input', function() {
@@ -520,8 +528,7 @@
             });
 
             cityList.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default action
-
+                event.preventDefault();
                 var target = event.target;
                 if (target.classList.contains('city-option')) {
                     var selectedCity = target.getAttribute('data-city');
@@ -554,20 +561,18 @@
 
                 updateCheckboxesWithAssignments(filteredCars);
                 updatePassengerOptions(filteredCars);
+                updateBagsOptions(filteredCars);
 
                 document.getElementById('carCount').textContent = filteredCars.length;
                 document.getElementById('carsCountCity').textContent = city + ': ';
-
 
                 return false;
             });
 
             function validateForm() {
                 var isValid = true;
-
                 var citySearchInput = document.getElementById('citySearchInput');
-                var citySelected = citySearchInput.value.trim() !== '';
-                if (!citySelected) {
+                if (!checkCityInput()) {
                     isValid = false;
                     citySearchInput.classList.add('is-invalid');
                 } else {
