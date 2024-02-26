@@ -26,11 +26,32 @@ func CarsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch car assignments
+	var assignments []entities.CarAssignment
+	if err := app.DB.Preload("Purpose").Preload("Car").Find(&assignments).Error; err != nil {
+		http.Error(w, "Failed to fetch car assignments data", http.StatusInternalServerError)
+		return
+	}
+
+	// Group assignments by car ID
+	assignmentsByCarID := make(map[int][]entities.CarAssignment)
+	for _, assignment := range assignments {
+		carID := assignment.Car.ID
+		assignmentsByCarID[carID] = append(assignmentsByCarID[carID], assignment)
+	}
+
+	// Associate assignments with their respective cars
+	for i, _ := range cars {
+		cars[i].Assignments = assignmentsByCarID[cars[i].ID]
+	}
+
+	// Pass data to the HTML template
 	data := &models.TemplateData{
 		Data: map[string]interface{}{
 			"Cities": cities,
 			"Cars":   cars,
 			"Types":  types,
+			// No need to pass assignments separately as they are already associated with cars
 		},
 	}
 

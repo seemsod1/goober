@@ -158,7 +158,8 @@ func Migration(DB *gorm.DB) {
 
 	cars := []*entities.Car{
 		{TypeId: 1, ModelId: 3, Bags: 2, Passengers: 5, Year: 2021, Plate: "AA1234AA", Price: 113, Color: "Black", LocationId: 1},
-		{TypeId: 14, ModelId: 7, Bags: 4, Passengers: 5, Year: 2021, Plate: "AA1235AA", Price: 200, Color: "Red", LocationId: 2},
+		{TypeId: 14, ModelId: 7, Bags: 4, Passengers: 5, Year: 2021, Plate: "BB1235BB", Price: 200, Color: "Red", LocationId: 2},
+		{TypeId: 14, ModelId: 7, Bags: 4, Passengers: 5, Year: 2021, Plate: "CC1235CC", Price: 220, Color: "Blue", LocationId: 3},
 	}
 	DB.Create(cars)
 
@@ -170,7 +171,11 @@ func Migration(DB *gorm.DB) {
 		{CarId: 2, PurposeId: 1},
 		{CarId: 2, PurposeId: 2},
 		{CarId: 2, PurposeId: 5},
-		{CarId: 2, PurposeId: 6},
+		{CarId: 2, PurposeId: 7},
+		{CarId: 3, PurposeId: 1},
+		{CarId: 3, PurposeId: 2},
+		{CarId: 3, PurposeId: 5},
+		{CarId: 3, PurposeId: 7},
 	}
 	DB.Create(assignments)
 

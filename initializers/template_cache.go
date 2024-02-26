@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"html/template"
 	"path/filepath"
+	"strings"
 )
 
 var functions = template.FuncMap{
@@ -16,6 +17,9 @@ var functions = template.FuncMap{
 			return template.JS("")
 		}
 		return template.JS(jsonData)
+	},
+	"toLower": func(s string) string {
+		return strings.ToLower(s)
 	},
 }
 

@@ -49,18 +49,22 @@
                         <div class="row g-3">
                             <div class="col-md-6 col-lg">
                                 <div class="position-relative">
-                                    <input class="form-control " id="carsPickup" placeholder="Start Rent" type="text" required="" name="start">
+                                    <input class="form-control " id="carsPickup" placeholder="Start Rent" type="text" required  >
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg">
                                 <div class="position-relative">
-                                    <input class="form-control " id="carsDropoff" placeholder="Rent End" type="text" required="" name="end">
+                                    <input class="form-control " id="carsDropoff" placeholder="Rent End" type="text" required  >
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <input class="form-control" type="text" id="location" placeholder="Location" required hidden>
+                        </div>
+
                     </div>
                     <div class="col-md-12 col-lg-1">
-                        <button class="btn btn-dark" style="margin-left: 24px;" type="submit">Search</button>
+                        <button class="btn btn-dark" style="margin-left: 24px;" type="submit" >Search</button>
                     </div>
                     <div id="validationMessage"></div>
                 </div>
@@ -158,51 +162,75 @@
                     </div>
                     <div class="car-list">
                         {{range .Data.Cars}}
-                        <div class="car-item bg-light shadow-md rounded p-3 mb-3">
-                            <div class="row ">
-                                <div class="col-md-4"><img class="img-fluid rounded align-top" src="/resources/img/cars/{{.Model.Name}}.png" alt="cars"> </div>
-                                <div class="col-md-8 mt-3 mt-md-0">
-                                    <div class="row g-0">
-                                        <div class="col-sm-9">
-                                            <h4 class="d-flex align-items-center">
-                                                <p class="text-dark fs-3 me-2 mb-0">{{.Model.Brand.Name}} {{.Model.Name}}</p>
-                                                <span class="alert alert-dark rounded-pill px-2 py-1 lh-1 fw-400 fs-5 mb-0">{{.Type.Name}}</span>
-                                            </h4>
-                                            <p class="car-features d-flex align-items-center mb-2 text-4">
-                                                <span class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="{{.Passengers}} Adult Passengers"><i class="fas fa-user"></i><small class="text-2 me-2">{{.Passengers}}</small></span>
-                                                <span data-bs-toggle="tooltip" title="" data-bs-original-title="{{.Bags}} Small Bag"><i class="fas fa-suitcase"></i> <small class="text-2 me-2">{{.Bags}}</small></span>
-                                                <span data-bs-toggle="tooltip" title="" data-bs-original-title="Drive unlimited distance with this car at no extra cost"><i class="fas fa-tachometer-alt"></i> <small class="text-2 me-2">Mileage</small></span>
-                                                <span data-bs-toggle="tooltip" title="" data-bs-original-title="Air Conditioning Available"><i class="fas fa-snowflake"></i> <small class="text-2 me-2">A/C</small></span>
-                                            </p>
-                                            <div class="row text-1 mb-3">
-                                                <div data-bs-toggle="tooltip" title="" class="col-6" data-bs-original-title="Free cancellation up to 72 hours prior to pick up"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Free Cancellation </div>
-                                                <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="Instantly confirmed upon booking"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Instantly Confirmed </div>
-                                                <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="In the unlikely event you find a better price on the same brand, we'll beat it. See 'Price Promise' on our About Us page"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Price Guarantee </div>
-                                                <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="Rate includes Third Party Liability Cover"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Third Party Liability </div>
-                                            </div>
-                                            <div class="row text-1 mb-3">
-                                                <div class="col-sm-9" data-bs-toggle="tooltip" title="" data-bs-original-title=""> <span class="me-1"><i class="fas fa-map-o"></i></span>{{.Location.City.Name}}, {{.Location.FullAddress}} </div>
-                                            </div>
-                                            <div class="row text-1 mb-3">
-                                                <div class="col-sm-3 col-md-auto d-flex justify-content-center" data-bs-toggle="tooltip" title="" data-bs-original-title="">
-                                                    <span class="badge text-bg-secondary"><i class="fas fa-map-o"></i> smth</span>
+                            <div class="car-item bg-light shadow-md rounded p-3 mb-3">
+                                <div class="row ">
+                                    <div class="col-md-4"><img class="img-fluid rounded align-top" src="/resources/img/cars/{{.Model.Name}}.png" alt="cars"> </div>
+                                    <div class="col-md-8 mt-3 mt-md-0">
+                                        <div class="row g-0">
+                                            <div class="col-sm-9">
+                                                <h4 class="d-flex align-items-center">
+                                                    <p class="text-dark fs-3 me-2 mb-0">{{.Model.Brand.Name}} {{.Model.Name}}</p>
+                                                    <span class="alert alert-dark rounded-pill px-2 py-1 lh-1 fw-400 fs-5 mb-0">{{.Type.Name}}</span>
+                                                </h4>
+                                                <p class="car-features d-flex align-items-center mb-2 text-4">
+                                                    <span class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="{{.Passengers}} Adult Passengers"><i class="fas fa-user"></i><small class="text-2 me-2">{{.Passengers}}</small></span>
+                                                    <span data-bs-toggle="tooltip" title="" data-bs-original-title="{{.Bags}} Small Bag"><i class="fas fa-suitcase"></i> <small class="text-2 me-2">{{.Bags}}</small></span>
+                                                    <span data-bs-toggle="tooltip" title="" data-bs-original-title="Drive unlimited distance with this car at no extra cost"><i class="fas fa-tachometer-alt"></i> <small class="text-2 me-2">Mileage</small></span>
+                                                    <span data-bs-toggle="tooltip" title="" data-bs-original-title="Air Conditioning Available"><i class="fas fa-snowflake"></i> <small class="text-2 me-2">A/C</small></span>
+                                                </p>
+                                                <div class="row text-1 mb-3">
+                                                    <div data-bs-toggle="tooltip" title="" class="col-6" data-bs-original-title="Free cancellation up to 72 hours prior to pick up"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Free Cancellation </div>
+                                                    <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="Instantly confirmed upon booking"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Instantly Confirmed </div>
+                                                    <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="In the unlikely event you find a better price on the same brand, we'll beat it. See 'Price Promise' on our About Us page"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Price Guarantee </div>
+                                                    <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="Rate includes Third Party Liability Cover"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Third Party Liability </div>
                                                 </div>
-                                                <div class="col-sm-3 col-md-auto d-flex justify-content-center" data-bs-toggle="tooltip" title="" data-bs-original-title="">
-                                                    <span class="badge text-bg-secondary"><i class="fas fa-map-o"></i> smth</span>
+                                                <div class="row text-1 mb-3">
+                                                    <div class="col-sm-9" data-bs-toggle="tooltip" title="" data-bs-original-title=""> <span class="me-1"><i class="fas fa-map-o"></i></span>{{.Location.City.Name}}, {{.Location.FullAddress}} </div>
+                                                </div>
+                                                <div class="row text-1 mb-3">
+
+
+                                                    {{range .Assignments}}
+
+                                                        <div class="col-sm-3 col-md-auto d-flex justify-content-center" data-bs-toggle="tooltip" title="" data-bs-original-title="">
+                                                            {{if eq .Purpose.Name "Family"}}
+                                                                <span class="badge text-bg-secondary"><i class="fas fa-group"></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "Business"}}
+                                                                <span class="badge text-bg-secondary"><i class="fas fa-briefcase"></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "City"}}
+                                                                <span class="badge text-bg-secondary"><i class="fas fa-city"></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "Off-road"}}
+                                                                <span class="badge text-bg-secondary"><i class="fas fa-mountain"></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "Sport"}}
+                                                                <span class="badge text bg-secondary"><i class="fas fa-futbol"></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "Luxury"}}
+                                                                <span class="badge text bg-secondary"><i class="fas fa-gem "></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "Economy"}}
+                                                                <span class="badge text bg-secondary"><i class="fas fa-coins"></i> {{.Purpose.Name}}</span>
+                                                            {{else if eq .Purpose.Name "Premium"}}
+                                                                <span class="badge text
+                                                    bg-secondary"><i class="fas fa-crown"></i> {{.Purpose.Name}}</span>
+                                                            {{else}}
+                                                                <span class="badge text bg-secondary"><i class="fas fa-car"></i> {{.Purpose.Name}}</span>
+                                                            {{end}}
+                                                        </div>
+                                                    {{end}}
+
+
+
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3 text-end d-flex flex-column align-items-end">
-                                            <div class="text-success fs-6 mb-0 order-2"></div> <!-- Discount -->
-                                            <div class="d-block fs-6 text-muted mb-0 me-2 me-sm-0 order-1"><del class="d-block"></del></div> <!-- Original Price -->
-                                            <div class="text-dark fs-3 fw-semibold me-2 me-sm-0 order-0">{{.Price}}$</div> <!-- Discounted Price -->
-                                            <div class="text-muted mb-0 mb-sm-1 order-3 d-none d-sm-block">per day</div>
-                                            <a href="#" class="btn btn-sm btn-dark order-4 mt-auto">Book Now</a>
+                                            <div class="col-sm-3 text-end d-flex flex-column align-items-end">
+                                                <div class="text-success fs-6 mb-0 order-2"></div> <!-- Discount -->
+                                                <div class="d-block fs-6 text-muted mb-0 me-2 me-sm-0 order-1"><del class="d-block"></del></div> <!-- Original Price -->
+                                                <div class="text-dark fs-3 fw-semibold me-2 me-sm-0 order-0">{{.Price}}$</div> <!-- Discounted Price -->
+                                                <div class="text-muted mb-0 mb-sm-1 order-3 d-none d-sm-block">per day</div>
+                                                <a href="#" class="btn btn-sm btn-dark order-4 mt-auto">Book Now</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         {{end}}
 
                     </div>
@@ -224,232 +252,346 @@
 {{define "js"}}
     <script>
 
-    const elem = document.getElementById('datePicker');
-    const rangepicker = new DateRangePicker(elem, {
+        const elem = document.getElementById('datePicker');
+        const rangepicker = new DateRangePicker(elem, {
 
-    });
-
-    let minSlider = document.querySelector('#min')
-    let maxSlider = document.querySelector('#max')
-
-    function numberWithSpaces(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    }
-
-
-
-
-
-    document.addEventListener("DOMContentLoaded", function() {
-        var carsData = {{ .Data.Cars | jsonify }};
-        var typesData = {{ .Data.Types | jsonify }};
-
-        var typeCounts = {};
-        var carCount = carsData.length;
-        document.getElementById('carCount').textContent = carCount;
-        document.getElementById('carsCountCity').textContent = "All Cities: ";
-        carsData.forEach(function(car) {
-            var typeId = car.Type.ID;
-            typeCounts[typeId] = (typeCounts[typeId] || 0) + 1;
         });
 
+        let minSlider = document.querySelector('#min')
+        let maxSlider = document.querySelector('#max')
 
-        typesData.forEach(function(type) {
-            var typeId = type.ID;
-            var count = typeCounts[typeId] || 0;
+        function numberWithSpaces(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+        }
 
+        document.addEventListener("DOMContentLoaded", function() {
+            var carsData = {{ .Data.Cars | jsonify }};
+            var typesData = {{ .Data.Types | jsonify }};
 
-            var checkbox = document.getElementById(type.Name.toLowerCase());
-
-            var label = checkbox.nextElementSibling;
-            label.innerHTML = type.Name + '<small class="text-muted float-end">' + count + '</small>';
-
-            checkbox.value = count;
-
-            if (count === 0) {
-                checkbox.disabled = true;
-                label.classList.add('text-muted');
-            } else {
-                checkbox.disabled = false;
-                label.classList.remove('text-muted');
-            }
-        });
-
-
-
-        function findMinMaxPrices() {
-            let minPrice = Number.MAX_VALUE;
-            let maxPrice = 0;
+            var typeCounts = {};
+            var carCount = carsData.length;
+            document.getElementById('carCount').textContent = carCount;
+            document.getElementById('carsCountCity').textContent = "All Cities: ";
             carsData.forEach(function(car) {
-                let price = parseFloat(car.Price);
-                if (!isNaN(price)) {
-                    if (price < minPrice) {
-                        minPrice = price;
+                var typeId = car.Type.ID;
+                typeCounts[typeId] = (typeCounts[typeId] || 0) + 1;
+            });
+            typesData.forEach(function(type) {
+                var typeId = type.ID;
+                var count = typeCounts[typeId] || 0;
+
+
+                var checkbox = document.getElementById(type.Name.toLowerCase());
+
+                var label = checkbox.nextElementSibling;
+                label.innerHTML = type.Name + '<small class="text-muted float-end">' + count + '</small>';
+
+                checkbox.value = count;
+
+                if (count === 0) {
+                    checkbox.disabled = true;
+                    label.classList.add('text-muted');
+                } else {
+                    checkbox.disabled = false;
+                    label.classList.remove('text-muted');
+                }
+            });
+
+            function findMinMaxPrices() {
+                let minPrice = Number.MAX_VALUE;
+                let maxPrice = 0;
+                carsData.forEach(function(car) {
+                    let price = parseFloat(car.Price);
+                    if (!isNaN(price)) {
+                        if (price < minPrice) {
+                            minPrice = price;
+                        }
+                        if (price > maxPrice) {
+                            maxPrice = price;
+                        }
                     }
-                    if (price > maxPrice) {
-                        maxPrice = price;
+                });
+                return { minPrice, maxPrice };
+            }
+
+            let minMaxPrices = findMinMaxPrices();
+            let minDollars = minMaxPrices.minPrice;
+            let maxDollars = minMaxPrices.maxPrice;
+
+            updateDollars();
+
+            function updateDollars() {
+                let fromValue = (maxDollars - minDollars) * minSlider.value / 100 + minDollars
+                let toValue   = (maxDollars - minDollars) * maxSlider.value / 100 + minDollars
+
+                document.querySelector('#from').textContent = `$${numberWithSpaces(Math.floor(fromValue))}`
+                document.querySelector('#to').textContent   = `$${numberWithSpaces(Math.floor(toValue))}`
+            }
+
+
+            maxSlider.addEventListener('input', () => {
+                let minValue = parseInt(minSlider.value)
+                let maxValue = parseInt(maxSlider.value)
+
+                if (maxValue < minValue + 10) {
+                    minSlider.value = maxValue - 10
+
+                    if (minValue === parseInt(minSlider.min)) {
+                        maxSlider.value = 10
                     }
                 }
-            });
-            return { minPrice, maxPrice };
-        }
 
-        let minMaxPrices = findMinMaxPrices();
-        let minDollars = minMaxPrices.minPrice;
-        let maxDollars = minMaxPrices.maxPrice;
+                updateDollars()
+            })
 
-        updateDollars();
+            minSlider.addEventListener('input', () => {
+                let minValue = parseInt(minSlider.value)
+                let maxValue = parseInt(maxSlider.value)
 
-        function updateDollars() {
-            let fromValue = (maxDollars - minDollars) * minSlider.value / 100 + minDollars
-            let toValue   = (maxDollars - minDollars) * maxSlider.value / 100 + minDollars
+                if (minValue > maxValue - 10) {
+                    maxSlider.value = minValue + 10
 
-            document.querySelector('#from').textContent = `$${numberWithSpaces(Math.floor(fromValue))}`
-            document.querySelector('#to').textContent   = `$${numberWithSpaces(Math.floor(toValue))}`
-        }
+                    if (maxValue === parseInt(maxSlider.max)) {
+                        minSlider.value = parseInt(maxSlider.max) - 10
+                    }
+                }
+
+                updateDollars()
+            })
 
 
-        maxSlider.addEventListener('input', () => {
-            let minValue = parseInt(minSlider.value)
-            let maxValue = parseInt(maxSlider.value)
 
-            if (maxValue < minValue + 10) {
-                minSlider.value = maxValue - 10
 
-                if (minValue === parseInt(minSlider.min)) {
-                    maxSlider.value = 10
+            var cityDropdownButton = document.getElementById('cityDropdownButton');
+            var cityList = document.getElementById('cityList');
+            var citySearchInput = document.getElementById('citySearchInput');
+            var cityOptions = document.querySelectorAll('.city-option');
+            var isFirstTime = true;
+
+            function filterCities(searchTerm) {
+                var found = false;
+                cityList.innerHTML = '';
+
+                cityOptions.forEach(function(cityOption) {
+                    var city = cityOption.getAttribute('data-city');
+                    if (city.toLowerCase().includes(searchTerm.toLowerCase())) {
+                        found = true;
+                        cityList.appendChild(cityOption.parentElement);
+
+                    }
+                });
+
+                if (!found) {
+                    cityList.innerHTML = '<li class="dropdown-header">City not found</li>';
                 }
             }
 
-            updateDollars()
-        })
-
-        minSlider.addEventListener('input', () => {
-            let minValue = parseInt(minSlider.value)
-            let maxValue = parseInt(maxSlider.value)
-
-            if (minValue > maxValue - 10) {
-                maxSlider.value = minValue + 10
-
-                if (maxValue === parseInt(maxSlider.max)) {
-                    minSlider.value = parseInt(maxSlider.max) - 10
+            function updateButtonColor() {
+                if (cityDropdownButton.classList.contains('has-city-selected')) {
+                    cityDropdownButton.classList.remove('btn-danger');
+                    cityDropdownButton.classList.add('btn-success');
+                } else {
+                    cityDropdownButton.classList.remove('btn-success');
+                    cityDropdownButton.classList.add('btn-danger');
                 }
             }
 
-            updateDollars()
-        })
+            function setInitialButtonColor() {
+                if (isFirstTime) {
+                    cityDropdownButton.classList.add('btn-dark');
+                    isFirstTime = false;
+                }
+            }
 
+            function checkCityInput() {
+                var enteredCity = citySearchInput.value.trim();
+                var isValidCity = Array.from(cityOptions).some(function(cityOption) {
+                    return cityOption.getAttribute('data-city').toLowerCase() === enteredCity.toLowerCase();
+                });
 
+                if (isValidCity) {
+                    cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> ' + enteredCity;
+                    cityDropdownButton.classList.add('has-city-selected');
+                    updateButtonColor();
+                } else {
+                    cityDropdownButton.classList.remove('has-city-selected');
+                    cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> Select City';
+                    updateButtonColor();
+                }
+            }
 
+            citySearchInput.addEventListener('input', function() {
+                var inputText = citySearchInput.value.trim();
+                filterCities(inputText);
 
-        var cityDropdownButton = document.getElementById('cityDropdownButton');
-        var cityList = document.getElementById('cityList');
-        var citySearchInput = document.getElementById('citySearchInput');
-        var cityOptions = document.querySelectorAll('.city-option');
-        var isFirstTime = true; // Flag to track if it's the first time visiting the site
+                checkCityInput();
 
-        function filterCities(searchTerm) {
-            var found = false;
-            cityList.innerHTML = '';
-
-            cityOptions.forEach(function(cityOption) {
-                var city = cityOption.getAttribute('data-city');
-                if (city.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    found = true;
-                    cityList.appendChild(cityOption.parentElement);
-
+                if (!inputText || Array.from(cityOptions).some(function(cityOption) {
+                    return cityOption.getAttribute('data-city').toLowerCase() === inputText.toLowerCase();
+                })) {
+                    citySearchInput.classList.remove('is-invalid');
+                } else {
+                    citySearchInput.classList.add('is-invalid');
                 }
             });
 
-            if (!found) {
-                cityList.innerHTML = '<li class="dropdown-header">City not found</li>';
-            }
-        }
+            cityList.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default action
 
-        function updateButtonColor() {
-            if (cityDropdownButton.classList.contains('has-city-selected')) {
-                cityDropdownButton.classList.remove('btn-danger');
-                cityDropdownButton.classList.add('btn-success');
-            } else {
-                cityDropdownButton.classList.remove('btn-success');
-                cityDropdownButton.classList.add('btn-danger');
-            }
-        }
-
-        function setInitialButtonColor() {
-            if (isFirstTime) {
-                cityDropdownButton.classList.add('btn-dark');
-                isFirstTime = false;
-            }
-        }
-
-        function checkCityInput() {
-            var enteredCity = citySearchInput.value.trim();
-            var isValidCity = Array.from(cityOptions).some(function(cityOption) {
-                return cityOption.getAttribute('data-city').toLowerCase() === enteredCity.toLowerCase();
+                var target = event.target;
+                if (target.classList.contains('city-option')) {
+                    var selectedCity = target.getAttribute('data-city');
+                    cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> ' + selectedCity;
+                    citySearchInput.value = selectedCity;
+                    cityDropdownButton.classList.add('has-city-selected');
+                    citySearchInput.classList.remove('is-invalid');
+                    updateButtonColor();
+                }
             });
 
-            if (isValidCity) {
-                cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> ' + enteredCity;
-                cityDropdownButton.classList.add('has-city-selected');
-                updateButtonColor();
-            } else {
-                cityDropdownButton.classList.remove('has-city-selected');
-                cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> Select City';
-                updateButtonColor();
+
+            setInitialButtonColor();
+        });
+
+        document.getElementById('bookingCars').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            var carsData = {{ .Data.Cars | jsonify }};
+
+            if (!validateForm()) {
+                return;
             }
-        }
 
-        citySearchInput.addEventListener('input', function() {
-            var inputText = citySearchInput.value.trim();
-            filterCities(inputText);
+            var city = document.getElementById('citySearchInput').value.trim();
 
-            checkCityInput();
+            var filteredCars = carsData.filter(function(car) {
+                return car.Location.City.Name === city;
+            });
 
-            if (!inputText || Array.from(cityOptions).some(function(cityOption) {
-                return cityOption.getAttribute('data-city').toLowerCase() === inputText.toLowerCase();
-            })) {
-                citySearchInput.classList.remove('is-invalid');
-            } else {
+            renderFilteredCars(filteredCars);
+
+            document.getElementById('carCount').textContent = filteredCars.length;
+            document.getElementById('carsCountCity').textContent = city + ': ';
+
+
+            return false;
+        });
+
+        function validateForm() {
+            var isValid = true;
+
+            var citySearchInput = document.getElementById('citySearchInput');
+            var citySelected = citySearchInput.value.trim() !== '';
+            if (!citySelected) {
+                isValid = false;
                 citySearchInput.classList.add('is-invalid');
-            }
-        });
-
-        cityList.addEventListener('click', function(event) {
-            var target = event.target;
-            if (target.classList.contains('city-option')) {
-                var selectedCity = target.getAttribute('data-city');
-                cityDropdownButton.innerHTML = '<i class="bi bi-geo-alt"></i> ' + selectedCity;
-                citySearchInput.value = selectedCity; // Set input field value to the selected city
-                cityDropdownButton.classList.add('has-city-selected');
+            } else {
                 citySearchInput.classList.remove('is-invalid');
-                updateButtonColor(); // Update button color
             }
-        });
 
-        document.getElementById('bookingCars').addEventListener('submit', function(event) {
-            var enteredCity = citySearchInput.value.trim();
-            var isValidCity = Array.from(cityOptions).some(function(cityOption) {
-                return cityOption.getAttribute('data-city').toLowerCase() === enteredCity.toLowerCase();
+            var carsPickup = document.getElementById('carsPickup').value.trim();
+            var carsDropoff = document.getElementById('carsDropoff').value.trim();
+            if (!carsPickup) {
+                isValid = false;
+                document.getElementById('carsPickup').classList.add('is-invalid');
+            } else {
+                document.getElementById('carsPickup').classList.remove('is-invalid');
+            }
+            if (!carsDropoff) {
+                isValid = false;
+                document.getElementById('carsDropoff').classList.add('is-invalid');
+            } else {
+                document.getElementById('carsDropoff').classList.remove('is-invalid');
+            }
+
+
+            return isValid;
+        }
+
+        function renderFilteredCars(filteredCars) {
+            var carListContainer = document.querySelector('.car-list');
+            carListContainer.innerHTML = ''; // Clear previous content
+
+            // Render filtered cars
+            filteredCars.forEach(function(car) {
+                var carItem = document.createElement('div');
+                carItem.classList.add('car-item', 'bg-light', 'shadow-md', 'rounded', 'p-3', 'mb-3');
+
+                // Populate car item HTML content (you can customize this based on your needs)
+                carItem.innerHTML = `
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-fluid rounded align-top" src="/resources/img/cars/${car.Model.Name}.png" alt="Car">
+                </div>
+                <div class="col-md-8 mt-3 mt-md-0">
+                   <div class="row g-0">
+                                        <div class="col-sm-9">
+                                            <h4 class="d-flex align-items-center">
+                                                <p class="text-dark fs-3 me-2 mb-0">${car.Model.Brand.Name} ${car.Model.Name}</p>
+                                                <span class="alert alert-dark rounded-pill px-2 py-1 lh-1 fw-400 fs-5 mb-0">${car.Type.Name}</span>
+                                            </h4>
+                                            <p class="car-features d-flex align-items-center mb-2 text-4">
+                                                <span class="d-inline-block" data-bs-toggle="tooltip" data-bs-placement="top" title="${car.Passengers} Adult Passengers"><i class="fas fa-user"></i><small class="text-2 me-2">${car.Passengers}</small></span>
+                                                <span data-bs-toggle="tooltip" title="" data-bs-original-title="${car.Bags} Small Bag"><i class="fas fa-suitcase"></i> <small class="text-2 me-2">${car.Bags}</small></span>
+                                                <span data-bs-toggle="tooltip" title="" data-bs-original-title="Drive unlimited distance with this car at no extra cost"><i class="fas fa-tachometer-alt"></i> <small class="text-2 me-2">Mileage</small></span>
+                                                <span data-bs-toggle="tooltip" title="" data-bs-original-title="Air Conditioning Available"><i class="fas fa-snowflake"></i> <small class="text-2 me-2">A/C</small></span>
+                                            </p>
+                                            <div class="row text-1 mb-3">
+                                                <div data-bs-toggle="tooltip" title="" class="col-6" data-bs-original-title="Free cancellation up to 72 hours prior to pick up"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Free Cancellation </div>
+                                                <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="Instantly confirmed upon booking"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Instantly Confirmed </div>
+                                                <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="In the unlikely event you find a better price on the same brand, we'll beat it. See 'Price Promise' on our About Us page"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Price Guarantee </div>
+                                                <div class="col-6" data-bs-toggle="tooltip" title="" data-bs-original-title="Rate includes Third Party Liability Cover"> <span class="text-success me-1"><i class="fas fa-check"></i></span>Third Party Liability </div>
+                                            </div>
+                                            <div class="row text-1 mb-3">
+                                                <div class="col-sm-9" data-bs-toggle="tooltip" title="" data-bs-original-title=""> <span class="me-1"><i class="fas fa-map-o"></i></span>${car.Location.City.Name}, ${car.Location.FullAddress} </div>
+                                            </div>
+                                                    <!-- Car Purpose Badges -->
+                                           <div class="row text-1 mb-3">
+        ${car.Assignments.map(assignment => `
+            <div class="col-sm-3 col-md-auto d-flex justify-content-center" data-bs-toggle="tooltip" title="" data-bs-original-title="">
+                ${assignment.Purpose.Name === "Family" ?
+                    `<span class="badge text-bg-secondary"><i class="fas fa-group"></i> ${assignment.Purpose.Name}</span>` :
+                    assignment.Purpose.Name === "Business" ?
+                        `<span class="badge text-bg-secondary"><i class="fas fa-briefcase"></i> ${assignment.Purpose.Name}</span>` :
+                        assignment.Purpose.Name === "City" ?
+                            `<span class="badge text-bg-secondary"><i class="fas fa-city"></i> ${assignment.Purpose.Name}</span>` :
+                            assignment.Purpose.Name === "Off-road" ?
+                                `<span class="badge text-bg-secondary"><i class="fas fa-mountain"></i> ${assignment.Purpose.Name}</span>` :
+                                assignment.Purpose.Name === "Sport" ?
+                                    `<span class="badge text bg-secondary"><i class="fas fa-futbol"></i> ${assignment.Purpose.Name}</span>` :
+                                    assignment.Purpose.Name === "Luxury" ?
+                                        `<span class="badge text bg-secondary"><i class="fas fa-gem"></i> ${assignment.Purpose.Name}</span>` :
+                                        assignment.Purpose.Name === "Economy" ?
+                                            `<span class="badge text bg-secondary"><i class="fas fa-coins"></i> ${assignment.Purpose.Name}</span>` :
+                                            assignment.Purpose.Name === "Premium" ?
+                                                `<span class="badge text bg-secondary"><i class="fas fa-crown"></i> ${assignment.Purpose.Name}</span>` :
+                                                `<span class="badge text bg-secondary"><i class="fas fa-car"></i> ${assignment.Purpose.Name}</span>`
+                }
+            </div>
+        `).join('')}
+    </div>
+
+                                        </div>
+                                        <div class="col-sm-3 text-end d-flex flex-column align-items-end">
+                                            <div class="text-success fs-6 mb-0 order-2"></div> <!-- Discount -->
+                                            <div class="d-block fs-6 text-muted mb-0 me-2 me-sm-0 order-1"><del class="d-block"></del></div> <!-- Original Price -->
+                                            <div class="text-dark fs-3 fw-semibold me-2 me-sm-0 order-0">${car.Price}$</div> <!-- Discounted Price -->
+                                            <div class="text-muted mb-0 mb-sm-1 order-3 d-none d-sm-block">per day</div>
+                                            <a href="#" class="btn btn-sm btn-dark order-4 mt-auto">Book Now</a>
+                                        </div>
+                                    </div>
+                </div>
+            </div>
+            `;
+
+                carListContainer.appendChild(carItem);
             });
-
-            // Check if a city is selected or if the entered city matches any city in the list
-            if (!cityDropdownButton.classList.contains('has-city-selected') && !isValidCity) {
-                citySearchInput.classList.add('is-invalid');
-                cityDropdownButton.classList.remove('btn-dark');
-                cityDropdownButton.classList.add('btn-danger');
-                event.preventDefault();
-            }
-        });
-
-        setInitialButtonColor();
-    });
-
-
+        }
 
 
 
 
 
     </script>
+
 {{end}}
