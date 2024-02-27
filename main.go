@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"help/controllers"
+	"help/helpers/render"
 	"help/initializers"
 	models "help/models/app_models"
+	"help/models/entities"
 	"log"
 	"net/http"
 	"os"
@@ -24,6 +27,8 @@ func main() {
 	initializers.SyncDB(app.DB)
 	//initializers.Migration(app.DB)
 	//Production
+	gob.Register(entities.User{})
+
 	app.InProduction = false
 
 	session = scs.New()
@@ -34,15 +39,16 @@ func main() {
 
 	app.Session = session
 
-	tc, err := initializers.CreateTemplateCache()
+	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
 	}
-
-	app.UseCache = false
 	app.TemplateCache = tc
+	app.UseCache = false
 
-	controllers.SetAppForTemplate(&app)
+	repo := controllers.NewRepo(&app)
+	controllers.NewControllers(repo)
+	render.NewRenderer(&app)
 
 	portNumber := ":" + os.Getenv("PORT")
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
@@ -53,5 +59,7 @@ func main() {
 	}
 
 	err = srv.ListenAndServe()
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

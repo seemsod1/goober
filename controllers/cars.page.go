@@ -1,34 +1,35 @@
 package controllers
 
 import (
+	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
 	"net/http"
 )
 
-func CarsPage(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) CarsPage(w http.ResponseWriter, r *http.Request) {
 	var cities []entities.City
 
 	var cars []entities.Car
-	result := app.DB.Find(&cities)
+	result := m.App.DB.Find(&cities)
 	if result.Error != nil {
 		http.Error(w, "Failed to fetch cities data", http.StatusInternalServerError)
 		return
 	}
-	if err := app.DB.Preload("Model").Preload("Model.Brand").Preload("Type").Preload("Location").Preload("Location.City").Find(&cars).Error; err != nil {
+	if err := m.App.DB.Preload("Model").Preload("Model.Brand").Preload("Type").Preload("Location").Preload("Location.City").Find(&cars).Error; err != nil {
 		http.Error(w, "Failed to fetch locations data", http.StatusInternalServerError)
 		return
 	}
 
 	var types []entities.CarType
-	if err := app.DB.Find(&types).Error; err != nil {
+	if err := m.App.DB.Find(&types).Error; err != nil {
 		http.Error(w, "Failed to fetch car types data", http.StatusInternalServerError)
 		return
 	}
 
 	// Fetch car assignments
 	var assignments []entities.CarAssignment
-	if err := app.DB.Preload("Purpose").Preload("Car").Find(&assignments).Error; err != nil {
+	if err := m.App.DB.Preload("Purpose").Preload("Car").Find(&assignments).Error; err != nil {
 		http.Error(w, "Failed to fetch car assignments data", http.StatusInternalServerError)
 		return
 	}
@@ -55,5 +56,5 @@ func CarsPage(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	renderTemplate(w, r, "cars.page.tmpl", data)
+	render.RenderTemplate(w, r, "cars.page.tmpl", data)
 }

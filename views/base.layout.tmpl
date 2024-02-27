@@ -18,15 +18,25 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker-bs5.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
+        <link rel="icon" type="image/x-icon" href="/resources/img/goober_small_white.svg">
 
     </head>
 
     <body>
     <nav class="navbar navbar-expand-lg bg-white fs-5 navbar-light py-3" style="display: flex;--bs-body-color: #1f83e7;">
-        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-bezier">
-                        <path fill-rule="evenodd" d="M0 10.5A1.5 1.5 0 0 1 1.5 9h1A1.5 1.5 0 0 1 4 10.5v1A1.5 1.5 0 0 1 2.5 13h-1A1.5 1.5 0 0 1 0 11.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm10.5.5A1.5 1.5 0 0 1 13.5 9h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM6 4.5A1.5 1.5 0 0 1 7.5 3h1A1.5 1.5 0 0 1 10 4.5v1A1.5 1.5 0 0 1 8.5 7h-1A1.5 1.5 0 0 1 6 5.5zM7.5 4a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"></path>
-                        <path d="M6 4.5H1.866a1 1 0 1 0 0 1h2.668A6.517 6.517 0 0 0 1.814 9H2.5c.123 0 .244.015.358.043a5.517 5.517 0 0 1 3.185-3.185A1.503 1.503 0 0 1 6 5.5zm3.957 1.358A1.5 1.5 0 0 0 10 5.5v-1h4.134a1 1 0 1 1 0 1h-2.668a6.517 6.517 0 0 1 2.72 3.5H13.5c-.123 0-.243.015-.358.043a5.517 5.517 0 0 0-3.185-3.185z"></path>
-                    </svg></span><span class="text-body-emphasis">Goober</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <span class="d-flex justify-content-center align-items-center me-2">
+<svg width="auto" height="auto" viewBox="0 0 3144 840" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M99.6588 485.851C99.1948 486.543 98.9767 487.158 99.0027 487.657C99.0536 488.58 99.9278 489.13 101.624 489.13L338.967 489.783C340.299 489.783 342.233 488.88 343.75 487.689C344.474 487.119 345.101 486.485 345.524 485.851L356.668 468.806C357.369 467.749 357.506 466.699 357.084 465.944C356.892 465.604 356.584 465.329 356.162 465.137C356.015 465.073 355.851 465.015 355.675 464.977C355.391 464.906 355.064 464.868 354.702 464.868H120.637C119.77 464.868 118.832 465.009 117.919 465.271C117.635 465.354 117.35 465.451 117.071 465.553C116.735 465.681 116.405 465.822 116.088 465.982C114.968 466.539 114.004 467.275 113.425 468.146L99.6588 485.851ZM0.6564 546.178C-0.656161 548.143 0.000116587 549.456 2.62204 549.456L312.742 548.797C315.364 548.797 317.986 547.49 318.642 544.865L323.886 529.125C324.542 527.159 323.229 525.194 320.608 525.194H21.635C19.0131 525.194 15.7349 526.507 14.4255 528.472L0.6564 546.178ZM161.289 609.782C159.877 609.782 159.035 609.213 158.762 608.38C158.528 607.663 158.715 606.754 159.32 605.844L168.501 589.452C169.811 587.486 172.432 585.52 175.057 585.52H306.185C308.807 585.52 310.117 587.486 310.117 590.111L308.807 605.844C308.807 608.47 306.185 610.435 304.216 610.435L161.289 609.782Z" fill="black"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M780.687 493.301L780.693 493.3C799.955 488.185 808.548 485.931 831.52 480.098C835.362 479.138 845.908 478.619 849.464 473.358C853.02 468.098 843.52 453.098 843.52 453.098C843.52 453.098 807.091 396.679 772.343 373.729C719.241 337.665 660.231 330.449 598.597 341.597C523.2 355.364 461.57 394.053 415.019 455.033C371.749 511.427 350.768 575.684 359.29 647.152C366.502 707.478 394.041 756.001 442.557 792.718C495.008 832.06 554.675 844.524 618.922 836.002C696.945 825.504 758.579 786.821 805.779 724.53C816.482 710.418 825.65 695.587 833.319 680.104C844.37 720.028 866.605 754.323 898.884 782.23C944.777 821.572 999.197 838.621 1058.86 839.934C1064.63 839.264 1070.49 838.749 1076.39 838.234L1076.4 838.228L1076.58 838.217L1076.59 838.216C1088.03 837.209 1099.67 836.184 1111.31 834.026C1172.28 821.572 1225.39 794.03 1268.67 750.098C1326.77 691.366 1352.72 623.103 1345.39 540.205C1349.42 551.463 1365.25 601.64 1350.24 659.457C1335.64 715.671 1316.26 736.693 1316.26 736.693C1332.26 756.394 1334.71 758.498 1347.85 769.727C1350.02 771.582 1352.48 773.687 1355.34 776.156C1401.24 815.498 1455.65 832.547 1515.31 833.859C1521.04 833.201 1526.84 832.689 1532.69 832.173L1532.69 832.173L1532.7 832.172L1532.7 832.172L1532.71 832.171L1532.84 832.159H1532.85L1533.03 832.143C1544.49 831.135 1556.12 830.111 1567.77 827.957C1628.74 815.498 1681.85 787.961 1725.12 744.024C1786.1 682.394 1811.66 610.267 1800.52 521.747C1804.55 533.005 1821.25 583.379 1806.24 641.196C1791.65 697.41 1772.26 718.431 1772.26 718.431L1811.34 757.895C1830.76 777.692 1892.56 831.024 1973.92 829.673C1979.65 829.014 1985.45 828.502 1991.31 827.986L1991.31 827.986L1991.32 827.985L1991.45 827.973H1991.46L1991.64 827.957C2003.09 826.949 2014.73 825.925 2026.38 823.771C2087.35 811.312 2157.24 780.63 2200.52 736.693C2261.49 675.063 2267.66 592.006 2256.52 503.486C2279.02 568.437 2272.95 604.028 2254.74 667.219C2240.14 723.433 2225.52 736.693 2225.52 736.693C2273.52 824.098 2360.02 848.598 2472.27 835.719C2546.55 827.196 2643.02 762.598 2673.52 712.098C2685.52 694.598 2693.82 684.55 2693.2 675.598C2692.79 669.705 2687.14 670.781 2677.02 668.598C2666.22 666.268 2647.52 663.371 2629.02 661.098C2605.28 658.181 2583.52 654.598 2583.52 654.598C2574.98 653.249 2569.52 652.098 2563.11 651.098C2553.52 649.601 2557.02 659.098 2544.02 675.598C2501.08 730.092 2456.75 730.661 2407.02 710.598C2359.81 689.614 2320.48 632.243 2332.28 581.1C2346.71 519.461 2385.04 481.365 2446.02 467.598C2466.12 464.464 2505.52 467.598 2534.02 480.598C2573.02 498.387 2599.3 523.943 2577.02 526.018C2547.6 528.757 2439.02 526.399 2424.52 526.399C2410.02 526.399 2408.33 529.018 2413.21 538.598L2429.85 609.336C2435.67 621.406 2441.2 622.892 2453.7 622.892C2466.2 622.892 2563.2 626.098 2563.2 626.098C2563.2 626.098 2656.7 623.598 2693.2 626.098C2709.59 627.22 2716.27 610.964 2718.3 591C2720.54 641.667 2701.26 740.5 2677.02 777.5C2652.78 814.5 2744.94 829.718 2796.5 835.719C2950.69 853.665 2909.2 572.493 2896 497.5C2882.8 422.507 2972.62 446.107 3035 433C3097.38 419.893 3190.86 357.912 3115.5 333.5C3045.25 310.743 2820.7 333.065 2718.3 343.098C2644.03 350.374 2717.33 462.33 2706.5 488C2702.65 467.081 2655.16 389.244 2620.52 375.598C2558.02 342.098 2488.52 332.598 2424.52 343.098C2349.02 357.259 2290.02 403.598 2242.95 464.098C2225.5 422.906 2197.4 380.04 2164.07 357.259C2107.03 318.577 2044.1 312.02 1977.22 323.821C1982.03 257.413 2088.11 106.533 2044.09 43.5968C1991.64 -31.4032 1914.52 -12.9024 1838.02 124.598C1776.82 234.598 1764.85 389.522 1775.56 446.598C1759.6 418.752 1736.88 395.211 1708.07 375.52C1651.03 336.837 1588.09 330.28 1521.22 342.082C1443.19 355.849 1385.5 388.634 1337.64 451.585C1333.75 456.67 1330.05 461.81 1326.54 467.005C1310.57 432.807 1285.24 404.577 1251.62 381.592C1194.58 342.909 1131.63 336.353 1064.76 348.154C986.74 361.922 929.042 394.707 881.178 457.658C860.67 484.5 845.294 512.874 835.821 542.899H624.824C618.629 542.899 614.515 545.499 611.824 548.412C610.246 550.122 609.161 551.934 608.436 553.388C599.256 570.44 583.521 604.531 575 624.862C570.41 636.01 573.688 644.533 587.452 644.533H713.992C712.254 646.966 710.604 649.307 709.015 651.569L709.009 651.581L708.753 651.946L708.752 651.947C707.359 653.926 706.009 655.844 704.674 657.711C701.884 661.611 699.165 665.28 696.292 668.796C666.787 702.234 629.414 717.973 584.833 712.069C533.034 704.859 496.974 661.579 496.321 609.123C495.665 556.014 518.612 513.392 563.196 484.539C600.568 460.277 645.429 445.811 681.869 474.703C693.02 483.545 694.841 490.956 704.674 502.098C712.874 511.561 721.799 508.836 730.619 506.465L731.693 506.176C749.737 501.521 765.323 497.382 780.687 493.301ZM1131.63 700.268C1183.43 673.38 1211.17 624.429 1214.45 568.035C1202.65 503.125 1141.47 451.754 1079.19 466.181C1018.21 479.948 978.872 518.637 964.449 580.276C952.645 631.419 977.56 683.216 1024.77 704.2C1060.83 719.939 1096.89 717.973 1131.63 700.268ZM1670.91 561.964C1670.6 556.614 1670.32 551.965 1669.39 547.315C1657.59 482.405 1597.93 445.681 1535.64 460.108C1474.66 473.875 1435.33 512.565 1420.9 574.203C1409.1 625.347 1434.02 677.143 1481.22 698.127C1517.28 713.867 1553.34 711.901 1588.09 694.196C1639.89 667.308 1668.08 625.347 1671.36 568.952C1671.17 566.537 1671.04 564.279 1670.92 562.134L1670.91 562.118L1670.91 561.964ZM2044.09 675.934C2095.89 649.046 2134.74 601.492 2138.02 545.098C2132.52 483.098 2053.93 427.421 1991.64 441.847C1930.67 455.614 1891.33 494.303 1876.9 555.942C1865.1 607.085 1888.32 654.951 1935.52 675.934C1971.58 691.674 2009.34 693.64 2044.09 675.934Z" fill="black"/>
+</svg>
+
+                </span>
+
+            </a>
+            <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="navbar-nav me-auto" style="--bs-body-color: var(--bs-navbar-active-color);">
                     <li class="nav-item"><a class="nav-link fs-5 link-body-emphasis" href="/" style="--bs-body-bg: var(--bs-btn-active-border-color);--bs-body-color: var(--bs-form-invalid-border-color);">Home</a></li>
@@ -36,8 +46,10 @@
                     <li class="nav-item"><a class="nav-link link-body-emphasis" href="#">FAQ</a></li>
                     <li class="nav-item"></li>
                 </ul>
-                <a href="/login" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black" role="button">Login</a>
-                <button class="btn btn-dark fs-5 border rounded-0 border-black" type="button" style="margin-left: 18px;">Sing up</button>
+                <a href="/join/login" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black" role="button">Login</a>
+                <a href="/join/singUp"class="btn btn-dark fs-5 border rounded-0 border-black" type="button" style="margin-left: 18px;">Sing up</a>
+{{/*                <button id="not-button" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black">Login</button>*/}}
+
             </div>
         </div>
     </nav>
@@ -127,12 +139,45 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/notie"></script>
+
 
     {{block "js" .}}
 
     {{end}}
 
     <script>
+        let attention = Prompt();
+
+        function notifyModal(title, icon) {
+            Swal.fire({
+                toast: true,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                position: 'top-end',
+                title: title,
+                icon: icon,
+                timer: 3000
+            })
+        }
+
+        {{with .Error}}
+        console.log("error sent")
+        notifyModal("{{.}}", "error");
+        {{end}}
+
+        {{with .Flash}}
+        notifyModal("{{.}}", "success");
+        {{end}}
+
+        {{with .Warning}}
+        notifyModal("{{.}}", "warning");
+        {{end}}
+
+
+
+
         $(document).ready(function(){
             // Initialize tooltips
             $('[data-bs-toggle="tooltip"]').tooltip();
@@ -178,6 +223,118 @@
                 }, false);
             });
         })();
+        function Prompt() {
+            let toast = function (c) {
+                const {
+                    msg = '',
+                    icon = 'success',
+                    position = 'top-end',
+
+                } = c;
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    title: msg,
+                    position: position,
+                    icon: icon,
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({})
+            }
+
+            let success = function (c) {
+                const {
+                    msg = "",
+                    title = "",
+                    footer = "",
+                } = c
+
+                Swal.fire({
+                    icon: 'success',
+                    title: title,
+                    text: msg,
+                    footer: footer,
+                })
+
+            }
+
+            let error = function (c) {
+                const {
+                    msg = "",
+                    title = "",
+                    footer = "",
+                } = c
+
+                Swal.fire({
+                    icon: 'error',
+                    title: title,
+                    text: msg,
+                    footer: footer,
+                })
+
+            }
+
+            async function custom(c) {
+                const {
+                    msg = "",
+                    title = "",
+                } = c;
+
+                const {value: result} = await Swal.fire({
+                    title: title,
+                    html: msg,
+                    backdrop: false,
+                    focusConfirm: false,
+                    showCancelButton: true,
+                    willOpen: () => {
+                        if (c.willOpen !== undefined) {
+                            c.willOpen();
+                        }
+                    },
+                    didOpen: () => {
+                        if (c.didOpen !== undefined) {
+                            c.didOpen();
+                        }
+                    },
+                    preConfirm: () => {
+                        return [
+                            document.getElementById('start').value,
+                            document.getElementById('end').value
+                        ]
+                    }
+                })
+
+                if (result) {
+                    if (result.dismiss !== Swal.DismissReason.cancel) {
+                        if (result.value !== "") {
+                            if (c.callback !== undefined) {
+                                c.callback(result);
+                            }
+                        } else {
+                            c.callback(false);
+                        }
+                    } else {
+                        c.callback(false);
+                    }
+                }
+            }
+
+            return {
+                toast: toast,
+                success: success,
+                error: error,
+                custom: custom,
+            }
+        }
+
+
     </script>
 
 

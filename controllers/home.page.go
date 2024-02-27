@@ -1,25 +1,28 @@
 package controllers
 
 import (
+	"help/helpers/render"
 	models "help/models/app_models"
 	"net/http"
 )
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
-	remoteIP := r.RemoteAddr
-	app.Session.Put(r.Context(), "remote_ip", remoteIP)
+func (m *Repository) HomePage(w http.ResponseWriter, r *http.Request) {
 
-	renderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
+	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
+
 	stringMap := make(map[string]string)
-	stringMap["test"] = "Hello, again"
+	stringMap["test"] = "Hello, again."
 
-	remoteIp := app.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = remoteIp
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIP
 
-	renderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
+	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }

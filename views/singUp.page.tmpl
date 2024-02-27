@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="/resources/login/css/style.css">
+    <link rel="stylesheet" href="/resources/css/login.css">
+    <link rel="icon" type="image/x-icon" href="/resources/img/goober_small_white.svg">
+
+
+</head>
+<body style="overflow: hidden;">
+<canvas></canvas>
+<section class="ftco-section">
+    <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-12 col-lg-14">
+                        <div class="wrap d-md-flex" >
+                            <div class="img" style="background-image: url(/resources/img/cars/x6.png);">
+                            </div>
+                            <div class="login-wrap p-4 ">
+                                <div class="d-flex">
+                                    <div class="w-100">
+                                <span>
+                                    <button onclick="history.back()" class="btn btn-outline-secondary">< Return</button>
+                                </span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex">
+                                    <div class="w-100">
+                                        <h3 class="mb-4">Sing Up</h3>
+                                    </div>
+                                </div>
+                                <form action="/join/singUp" method="post" class="sing-up">
+                                    <div class="form-group mb-3">
+                                        <div class="row">
+                                            <div class="col">
+                                            <label class="label" for="name">Name</label>
+                                                {{with .Form.Errors.Get "name"}}
+                                                    <label class="text-danger">{{.}}</label>
+                                                {{end}}
+                                            <input type="text" id="name" name="name"  autocomplete="off" class="form-control {{with .Form.Errors.Get "name"}} is-invalid {{end}}" placeholder="Vadim" value="" required>
+                                            </div>
+                                            <div class="col">
+                                                <label class="label" for="phone">Phone</label>
+                                                {{with .Form.Errors.Get "phone"}}
+                                                <label class="text-danger">{{.}}</label>
+                                                {{end}}
+                                                <input type="tel" id="phone" autocomplete="off" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}" name="phone" placeholder="e.g., 0501234567" pattern="(\+?38)?(\s?0\d{2}){1}\s?\d{3}\s?\d{2}\s?\d{2}" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="label" for="email">Mail</label>
+                                        {{with .Form.Errors.Get "email"}}
+                                        <label class="text-danger">{{.}}</label>
+                                        {{end}}
+                                        <input type="text" id="email" name="email" autocomplete="off" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" placeholder="example@box.com" value="" required>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="label" for="password">Password</label>
+                                        {{with .Form.Errors.Get "password"}}
+                                        <label class="text-danger">{{.}}</label>
+                                        {{end}}
+                                        <input type="password" id="password"  autocomplete="off" name="password" class="form-control {{with .Form.Errors.Get "password"}} is-invalid {{end}}" placeholder="Password" value="" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="form-control btn btn-primary rounded submit px-3">Sing Up</button>
+                                    </div>
+                                    </div>
+                                </form>
+                                <p class="text-center">Already a member? <a href="/join/login" id="login-link" class="login-link">Log in</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</section>
+
+<script src="/resources/login/js/jquery.min.js"></script>
+<script src="/resources/login/js/popper.js"></script>
+<script src="/resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="/resources/js/join.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/notie"></script>
+
+<script>
+    function notifyModal(title, icon) {
+        Swal.fire({
+            toast: true,
+            showConfirmButton: false,
+            timerProgressBar: true,
+            position: 'top-end',
+            title: title,
+            icon: icon,
+            timer: 3000
+        })
+    }
+
+    {{with .Error}}
+    console.log("error sent")
+    notifyModal("{{.}}", "error");
+    {{end}}
+
+    {{with .Flash}}
+    notifyModal("{{.}}", "success");
+    {{end}}
+
+    {{with .Warning}}
+    notifyModal("{{.}}", "warning");
+    {{end}}
+</script>
+
+</body>
+</html>
+
