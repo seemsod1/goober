@@ -62,6 +62,7 @@ body {
   position: relative;
 }
 
+/* Default styles for all screens */
 .nav-link::after {
   content: '';
   opacity: 0;
@@ -75,8 +76,17 @@ body {
   right: 0;
 }
 
-.nav-link:hover::after {
-  opacity: 1;
-  width: 100%;
+/* Apply styles only on large screens */
+@media (min-width: 992px) {
+  .navbar-expand-lg .nav-link:hover::after {
+    opacity: 1;
+    width: 100%;
+  }
+  .navbar-expand-lg .dropdown .nav-link::after {
+    display: none;
+  }
+}
+.dropdown-menu {
+  list-style: none;
 }
 

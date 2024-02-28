@@ -24,9 +24,8 @@ func routes() http.Handler {
 	join.Use(SessionLoad)
 	join.Group(func(join chi.Router) {
 		join.Use(NoSurf)
-
 		join.Get("/login", controllers.Repo.LoginPage)
-		//login.Post("/login", controllers.Login)
+		join.Post("/login", controllers.Repo.UserLogin)
 	})
 	join.Get("/singUp", controllers.Repo.SingUpPage)
 	join.Post("/singUp", controllers.Repo.UserSingUp)

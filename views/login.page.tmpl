@@ -18,10 +18,8 @@
 <body style="overflow: hidden;">
 <canvas></canvas>
 <section class="ftco-section">
-    <div class="flip-card">
-        <div class="flip-card__front">
             <div class="container">
-        <div class="row justify-content-center">
+            <div class="row justify-content-center">
             <div class="col-md-12 col-lg-10">
                 <div class="wrap d-md-flex" >
                     <div class="img" style="background-image: url(/resources/login/images/bg-1.jpg);">
@@ -40,14 +38,21 @@
                                 <h3 class="mb-4">Sign In</h3>
                             </div>
                         </div>
-                        <form action="#" class="signin-form">
+                        <form action="/join/login" method="post" class="signin-form">
+                            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                             <div class="form-group mb-3">
-                                <label class="label" for="name">Username</label>
-                                <input type="text" class="form-control" placeholder="Username" required>
+                                <label class="label" for="email">Mail</label>
+                                {{with .Form.Errors.Get "email"}}
+                                    <label class="text-danger">{{.}}</label>
+                                {{end}}
+                                <input type="email" id="email" name="email" autocomplete="off" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" placeholder="example@box.com" value="" required>
                             </div>
                             <div class="form-group mb-3">
                                 <label class="label" for="password">Password</label>
-                                <input type="password" class="form-control" placeholder="Password" required>
+                                {{with .Form.Errors.Get "password"}}
+                                    <label class="text-danger">{{.}}</label>
+                                {{end}}
+                                <input type="password" id="password"  autocomplete="off" name="password" class="form-control {{with .Form.Errors.Get "password"}} is-invalid {{end}}" placeholder="Password" value="" required>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign In</button>
@@ -68,8 +73,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+
         </div>
     </div>
 </section>
@@ -88,7 +93,7 @@
             toast: true,
             showConfirmButton: false,
             timerProgressBar: true,
-            position: 'top-end',
+            position: 'bottom-end',
             title: title,
             icon: icon,
             timer: 3000

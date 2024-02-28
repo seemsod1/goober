@@ -55,6 +55,16 @@ func (f *Form) MinLength(field string, length int) bool {
 	return true
 }
 
+// Maxlength checks for string minimum length
+func (f *Form) Maxlength(field string, length int) bool {
+	x := f.Get(field)
+	if len(x) > length {
+		f.Errors.Add(field, fmt.Sprintf("This field must be at most %d characters long", length))
+		return false
+	}
+	return true
+}
+
 // IsEmail checks for valid email address
 func (f *Form) IsEmail(field string) {
 	var validate *validator.Validate

@@ -26,7 +26,7 @@
     <body>
     <nav class="navbar navbar-expand-lg bg-white fs-5 navbar-light py-3" style="display: flex;--bs-body-color: #1f83e7;">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/">
+            <a class="navbar-brand d-flex align-items-center ms-auto" href="/">
                 <span class="d-flex justify-content-center align-items-center me-2">
 <svg width="auto" height="auto" viewBox="0 0 3144 840" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M99.6588 485.851C99.1948 486.543 98.9767 487.158 99.0027 487.657C99.0536 488.58 99.9278 489.13 101.624 489.13L338.967 489.783C340.299 489.783 342.233 488.88 343.75 487.689C344.474 487.119 345.101 486.485 345.524 485.851L356.668 468.806C357.369 467.749 357.506 466.699 357.084 465.944C356.892 465.604 356.584 465.329 356.162 465.137C356.015 465.073 355.851 465.015 355.675 464.977C355.391 464.906 355.064 464.868 354.702 464.868H120.637C119.77 464.868 118.832 465.009 117.919 465.271C117.635 465.354 117.35 465.451 117.071 465.553C116.735 465.681 116.405 465.822 116.088 465.982C114.968 466.539 114.004 467.275 113.425 468.146L99.6588 485.851ZM0.6564 546.178C-0.656161 548.143 0.000116587 549.456 2.62204 549.456L312.742 548.797C315.364 548.797 317.986 547.49 318.642 544.865L323.886 529.125C324.542 527.159 323.229 525.194 320.608 525.194H21.635C19.0131 525.194 15.7349 526.507 14.4255 528.472L0.6564 546.178ZM161.289 609.782C159.877 609.782 159.035 609.213 158.762 608.38C158.528 607.663 158.715 606.754 159.32 605.844L168.501 589.452C169.811 587.486 172.432 585.52 175.057 585.52H306.185C308.807 585.52 310.117 587.486 310.117 590.111L308.807 605.844C308.807 608.47 306.185 610.435 304.216 610.435L161.289 609.782Z" fill="black"/>
@@ -45,15 +45,40 @@
                     <li class="nav-item"><a class="nav-link link-body-emphasis" href="#">Contact</a></li>
                     <li class="nav-item"><a class="nav-link link-body-emphasis" href="#">FAQ</a></li>
                     <li class="nav-item"></li>
-                </ul>
-                <a href="/join/login" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black" role="button">Login</a>
-                <a href="/join/singUp"class="btn btn-dark fs-5 border rounded-0 border-black" type="button" style="margin-left: 18px;">Sing up</a>
-{{/*                <button id="not-button" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black">Login</button>*/}}
 
+
+                </ul>
+
+
+                {{if ne .PermissionLevel 0}}
+                    <div class="dropdown">
+                        <a id="profileDropDown" class="nav-link dropdown-toggle link-body-emphasis bg-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="/resources/img/24.jpg" width="55" height="55" class="rounded-circle" alt="Profile Photo">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                            {{if eq .PermissionLevel 1}}
+                            <li><a class="dropdown-item" href="#">Admin Dashboard</a></li>
+                            {{else if eq .PermissionLevel 2}}}
+                            <li><a class="dropdown-item" href="#">Manager Dashboard</a></li>
+                            {{else}}
+                            <li><a class="dropdown-item" href="#">My History</a></li>
+                            <li><a class="dropdown-item" href="#">Change password</a></li>
+                            {{end}}
+                            <li><a class="dropdown-item" href="/join/logout">Logout</a></li>
+                        </ul>
+                    </div>
+                {{else}}
+                    <a href="/join/login" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black" role="button">Login</a>
+                    <a href="/join/signUp" class="btn btn-dark fs-5 border rounded-0 border-2 border-black" type="button" style="margin-left: 18px;">Sign up</a>
+
+                {{end}}
+
+
+                {{/* <button id="not-button" class="btn btn-outline-dark fs-5 border rounded-0 border-2 border-black">Login</button> */}}
             </div>
         </div>
     </nav>
-     {{block "content" .}}
+    {{block "content" .}}
 
       {{end}}
 
@@ -141,6 +166,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/notie"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
     {{block "js" .}}
@@ -155,7 +181,7 @@
                 toast: true,
                 showConfirmButton: false,
                 timerProgressBar: true,
-                position: 'top-end',
+                position: 'bottom-end',
                 title: title,
                 icon: icon,
                 timer: 3000
@@ -333,6 +359,7 @@
                 custom: custom,
             }
         }
+
 
 
     </script>
