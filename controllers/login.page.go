@@ -10,9 +10,16 @@ import (
 )
 
 func (m *Repository) LoginPage(w http.ResponseWriter, r *http.Request) {
+	_, ok := m.App.Session.Get(r.Context(), "user_id").(int)
+	if ok {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	render.RenderTemplate(w, r, "login.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 	})
+
 }
 
 func (m *Repository) UserLogin(w http.ResponseWriter, r *http.Request) {

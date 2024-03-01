@@ -1,0 +1,36 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <form action="/confirm-booking" class="needs-validation" method="post">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+        <div class="container">
+        <div class="row justify-content-center">
+            <div class="col text-center">
+                <h1 class="mt-5">Confirmation</h1>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="mt-4">Rent Information:</h2>
+                <p><strong>Rental Duration:</strong> {{.Data.Rent.StartDate.Format "02 Jan 2006"}} - {{.Data.Rent.EndDate.Format "02 Jan 2006"}}</p>
+                <p><strong>Price:</strong> ${{.Data.Rent.Price}}</p>
+                <p><strong>From Location:</strong> {{.Data.Rent.From.City.Name}}, {{.Data.Rent.From.FullAddress}}</p>
+                <p><strong>Return Location:</strong> {{.Data.Rent.Return.City.Name}}, {{.Data.Rent.Return.FullAddress}}</p>
+                <p><strong>Payment Method:</strong> {{.Data.Rent.PaymentMethod}}</p>
+
+                <h2 class="mt-4">Car Information:</h2>
+                <p><strong>Model:</strong> {{.Data.Car.Model.Name}}</p>
+                <p><strong>Brand:</strong> {{.Data.Car.Model.Brand.Name}}</p>
+                <p><strong>Year:</strong> {{.Data.Car.Year}}</p>
+                <p><strong>Plate:</strong> {{.Data.Car.Plate}}</p>
+                <p><strong>Color:</strong> {{.Data.Car.Color}}</p>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Confirm Reservation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+{{end}}

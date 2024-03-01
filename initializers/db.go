@@ -38,6 +38,15 @@ func SyncDB(DB *gorm.DB) {
 }
 
 func Migration(DB *gorm.DB) {
+
+	statuses := []*entities.RentStatus{
+		{Name: "Active"},
+		{Name: "Canceled"},
+		{Name: "Finished"},
+		{Name: "Processing"},
+	}
+	DB.Create(statuses)
+
 	roles := []*entities.UserRole{
 		{Name: "Admin"},
 		{Name: "Manager"},
@@ -159,7 +168,7 @@ func Migration(DB *gorm.DB) {
 	cars := []*entities.Car{
 		{TypeId: 1, ModelId: 3, Bags: 2, Passengers: 5, Year: 2021, Plate: "AA1234AA", Price: 113, Color: "Black", LocationId: 1},
 		{TypeId: 14, ModelId: 7, Bags: 4, Passengers: 5, Year: 2021, Plate: "BB1235BB", Price: 200, Color: "Red", LocationId: 2},
-		{TypeId: 14, ModelId: 7, Bags: 4, Passengers: 5, Year: 2021, Plate: "CC1235CC", Price: 220, Color: "Blue", LocationId: 3},
+		{TypeId: 14, ModelId: 7, Bags: 4, Passengers: 5, Year: 2021, Plate: "CC1235CC", Price: 220, Color: "Blue", LocationId: 1},
 	}
 	DB.Create(cars)
 

@@ -28,6 +28,9 @@ func main() {
 	//initializers.Migration(app.DB)
 	//Production
 	gob.Register(entities.User{})
+	gob.Register(entities.RentInfo{})
+	gob.Register(entities.CarHistory{})
+	gob.Register(entities.UserHistory{})
 
 	app.InProduction = false
 

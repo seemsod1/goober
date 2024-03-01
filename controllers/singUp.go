@@ -9,6 +9,12 @@ import (
 )
 
 func (m *Repository) SingUpPage(w http.ResponseWriter, r *http.Request) {
+	_, ok := m.App.Session.Get(r.Context(), "user_id").(int)
+	if ok {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	render.RenderTemplate(w, r, "singUp.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 	})

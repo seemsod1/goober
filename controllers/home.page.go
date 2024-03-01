@@ -7,14 +7,13 @@ import (
 )
 
 func (m *Repository) HomePage(w http.ResponseWriter, r *http.Request) {
-
-	remoteIP := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+	m.ClearSessionData(r)
 
 	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
+	m.ClearSessionData(r)
 
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello, again."
