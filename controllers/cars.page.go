@@ -30,7 +30,7 @@ func (m *Repository) CarsPage(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) CarsPagePost(w http.ResponseWriter, r *http.Request) {
 	rent, ok := m.App.Session.Get(r.Context(), "rent").(entities.RentInfo)
 	if ok {
-		m.App.Session.Remove(r.Context(), "rent")
+		m.ClearSessionData(r)
 	}
 
 	err := r.ParseForm()
@@ -64,7 +64,7 @@ func (m *Repository) CarsPagePost(w http.ResponseWriter, r *http.Request) {
 	result := m.App.DB.
 		Table("cars c").
 		Select("c.ID, c.model_id, c.type_id, c.location_id, c.Plate, c.Price, c.Color, c.Bags, c.Passengers, c.Year").
-		Joins("LEFT JOIN car_histories ch ON c.ID = ch.Car_Id").
+		Joins("LEFT JOIN (SELECT * FROM car_histories ch1 WHERE ch1.updated_at = (SELECT MAX(ch2.updated_at) FROM car_histories ch2 WHERE ch2.car_id = ch1.car_id)) ch ON c.ID = ch.Car_Id").
 		Joins("LEFT JOIN rent_infos r ON ch.rent_info_id = r.ID").
 		Joins("LEFT JOIN cities l ON c.location_id = l.ID").
 		Where("l.name = ? AND (r.ID IS NULL OR (r.Start_Date > ? OR r.End_Date < ? OR r.status_id = 2 OR r.status_id = 3))", city, endDate, startDate).

@@ -10,7 +10,7 @@ import (
 
 func (m *Repository) ConfirmBooking(w http.ResponseWriter, r *http.Request) {
 	rent, ok := m.App.Session.Get(r.Context(), "rent").(entities.RentInfo)
-	if !ok || rent.ID != 4 {
+	if !ok || rent.StatusId != 4 {
 		m.ClearSessionData(r)
 		m.App.Session.Put(r.Context(), "error", "can't get reservation from session")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -72,12 +72,7 @@ func (m *Repository) ConfirmBookingPost(w http.ResponseWriter, r *http.Request) 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	carRent, ok := m.App.Session.Get(r.Context(), "car_rent").(entities.CarHistory)
-	if !ok {
-		m.App.Session.Put(r.Context(), "error", "can't get car rent from session")
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
+
 	res := m.App.DB.Create(&userRent)
 	if res.Error != nil {
 		m.App.Session.Put(r.Context(), "error", "can't create user rent")
@@ -85,12 +80,6 @@ func (m *Repository) ConfirmBookingPost(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	res = m.App.DB.Create(&carRent)
-	if res.Error != nil {
-		m.App.Session.Put(r.Context(), "error", "can't create car rent")
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
 	m.App.Session.Remove(r.Context(), "reservation")
 	m.App.Session.Remove(r.Context(), "car_rent")
 	m.App.Session.Remove(r.Context(), "rent")
