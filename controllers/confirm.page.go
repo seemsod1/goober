@@ -66,19 +66,6 @@ func (m *Repository) ConfirmBookingPost(w http.ResponseWriter, r *http.Request) 
 	}
 	rent.StatusId = 1
 	m.App.DB.Save(&rent)
-	userRent, ok := m.App.Session.Get(r.Context(), "user_rent").(entities.UserHistory)
-	if !ok {
-		m.App.Session.Put(r.Context(), "error", "can't get user rent from session")
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-
-	res := m.App.DB.Create(&userRent)
-	if res.Error != nil {
-		m.App.Session.Put(r.Context(), "error", "can't create user rent")
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
 
 	m.App.Session.Remove(r.Context(), "reservation")
 	m.App.Session.Remove(r.Context(), "car_rent")

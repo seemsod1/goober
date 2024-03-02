@@ -1,0 +1,97 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center">My Rent History</h1>
+
+                {{if not .Data.carsHistories}}
+                    <p class="text-center">No rent history available.</p>
+                {{else}}
+                    <div class="table-responsive text-center">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">Car</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">End Date</th>
+                                <th scope="col">From</th>
+                                <th scope="col">Return</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{range .Data.carsHistories}}
+                                <tr>
+                                    <td>{{.Car.Model.Brand.Name}} {{.Car.Model.Name}}</td>
+                                    <td>{{.RentInfo.StartDate.Format "2006-01-02"}}</td>
+                                    <td>{{.RentInfo.EndDate.Format "2006-01-02"}}</td>
+                                    <td>{{.RentInfo.From.City.Name}},{{.RentInfo.From.FullAddress}}</td>
+                                    <td>{{.RentInfo.Return.City.Name}},{{.RentInfo.Return.FullAddress}}</td>
+                                    <td>{{.RentInfo.Price}}</td>
+                                    <td>{{.RentInfo.Status.Name}}</td>
+                                    <td>
+                                        {{if eq .RentInfo.Status.Name "Active"}}
+                                            <a href="#" class="btn btn-dark" onclick="confirmFinish('{{.RentInfo.ID}}')">Finish</a>
+                                        {{else}}
+                                            <p></p>
+                                        {{end}}
+                                    </td>
+                                </tr>
+                            {{end}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{if .Data.pagination.TotalPages}}
+                    <ul class="pagination justify-content-center mt-4 mb-0">
+                        {{if .Data.pagination.HasPrev}}
+                            <li class="page-item"> <a class="page-link" href="?page={{.Data.pagination.PrevPage}}"><i class="fas fa-angle-left"></i></a> </li>
+                        {{else}}
+                            <li class="page-item disabled"> <span class="page-link"><i class="fas fa-angle-left"></i></span> </li>
+                        {{end}}
+
+                        {{range .Data.pagination.Pages}}
+                            {{if eq . $.Data.pagination.CurrentPage}}
+                                <li class="page-item active"><span class="page-link">{{.}}</span></li>
+                            {{else}}
+                                <li class="page-item"><a class="page-link" href="?page={{.}}">{{.}}</a></li>
+                            {{end}}
+                        {{end}}
+
+                        {{if .Data.pagination.HasNext}}
+                            <li class="page-item"> <a class="page-link" href="?page={{.Data.pagination.NextPage}}"><i class="fas fa-angle-right"></i></a> </li>
+                        {{else}}
+                            <li class="page-item disabled"> <span class="page-link"><i class="fas fa-angle-right"></i></span> </li>
+                        {{end}}
+                    </ul>
+                {{end}}
+
+            </div>
+        </div>
+    </div>
+{{end}}
+{{end}}
+
+{{define "js"}}
+    <script>
+    function confirmFinish(rentInfoID) {
+    Swal.fire({
+    title: 'Confirm Finish',
+    text: 'Are you sure you want to finish this rental?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#b9ec88',
+    cancelButtonColor: '#e55858',
+    confirmButtonText: 'Yes, finish it!'
+    }).then((result) => {
+    if (result.isConfirmed) {
+    // Redirect to the actual finish-rent route with the rentInfoID
+    window.location.href = '/finish-rent/' + rentInfoID;
+    }
+    });
+    }
+    </script>
+{{end}}

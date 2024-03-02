@@ -17,12 +17,18 @@ func routes() http.Handler {
 		mux.Get("/about", controllers.Repo.About)
 		mux.Get("/cars", controllers.Repo.CarsPage)
 		mux.Post("/cars", controllers.Repo.CarsPagePost)
+	})
+	mux.Group(func(mux chi.Router) {
+		mux.Use(RequireAuth)
 		mux.Get("/choose-car/{id}", controllers.Repo.ChooseCar)
 		mux.Get("/make-booking", controllers.Repo.MakeBooking)
 		mux.Post("/make-booking", controllers.Repo.MakeBookingPost)
 		mux.Get("/confirm-booking", controllers.Repo.ConfirmBooking)
 		mux.Post("/confirm-booking", controllers.Repo.ConfirmBookingPost)
+		mux.Get("/my-history", controllers.Repo.MyHistory)
+		mux.Get("/finish-rent/{id}", controllers.Repo.FinishRent)
 	})
+
 	mux.Get("/logout", controllers.Repo.Logout)
 
 	join := chi.NewRouter()

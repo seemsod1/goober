@@ -166,6 +166,21 @@ func (m *Repository) ChooseCar(w http.ResponseWriter, r *http.Request) {
 	carRent.CarId = carId
 	carRent.RentInfoId = rent.ID
 	res = m.App.DB.Create(&carRent)
+	if res.Error != nil {
+		m.App.Session.Put(r.Context(), "error", "Can't create car history")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	var userRent entities.UserHistory
+	userRent.UserID = userId
+	userRent.RentInfoID = rent.ID
+	res = m.App.DB.Create(&userRent)
+	if res.Error != nil {
+		m.App.Session.Put(r.Context(), "error", "Can't create user history")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
 
 	userHistory := entities.UserHistory{UserID: userId, RentInfoID: rent.ID}
 	carHistory := entities.CarHistory{CarId: carId, RentInfoId: rent.ID}
