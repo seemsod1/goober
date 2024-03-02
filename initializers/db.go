@@ -31,6 +31,7 @@ func SyncDB(DB *gorm.DB) {
 		&entities.CarPurpose{},
 		&entities.Car{},
 		&entities.CarAssignment{},
+		&entities.RentStatus{},
 		&entities.RentInfo{},
 		&entities.UserHistory{},
 		&entities.CarHistory{},

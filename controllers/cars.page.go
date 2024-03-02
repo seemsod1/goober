@@ -61,19 +61,26 @@ func (m *Repository) CarsPagePost(w http.ResponseWriter, r *http.Request) {
 
 	//result := m.App.DB.Raw("SELECT    c.ID,c.model_id,c.type_id,c.location_id,    c.Plate,    c.Price,    c.Color,    c.Bags,    c.Passengers,    c.Year FROM cars c        LEFT JOIN car_histories ch ON c.ID = ch.Car_Id        LEFT JOIN rent_infos r ON ch.rent_info_id = r.ID         LEFT JOIN cities l ON c.location_id = l.ID WHERE l.name = ?  AND (r.ID IS NULL OR (r.Start_Date > ? OR r.End_Date < ?))ORDER BY c.ID", city, endDate, startDate).Scan(&cars)
 
+	subQuery := m.App.DB.
+		Table("car_histories").
+		Select("DISTINCT car_id").
+		Joins("JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id").
+		Where("rent_infos.status_id IN (?,?)", 4, 1).
+		Not("(rent_infos.end_date <= ? OR rent_infos.start_date >= ?)", startDate, endDate)
+
+	// Main query to find available cars in Kyiv during the specified time period
 	result := m.App.DB.
-		Table("cars c").
-		Select("c.ID, c.model_id, c.type_id, c.location_id, c.Plate, c.Price, c.Color, c.Bags, c.Passengers, c.Year").
-		Joins("LEFT JOIN (SELECT * FROM car_histories ch1 WHERE ch1.updated_at = (SELECT MAX(ch2.updated_at) FROM car_histories ch2 WHERE ch2.car_id = ch1.car_id)) ch ON c.ID = ch.Car_Id").
-		Joins("LEFT JOIN rent_infos r ON ch.rent_info_id = r.ID").
-		Joins("LEFT JOIN cities l ON c.location_id = l.ID").
-		Where("l.name = ? AND (r.ID IS NULL OR (r.Start_Date > ? OR r.End_Date < ? OR r.status_id = 2 OR r.status_id = 3))", city, endDate, startDate).
-		Order("c.ID").
-		Preload("Type").
-		Preload("Model").
+		Debug().
+		Table("cars").
 		Preload("Location").
 		Preload("Location.City").
+		Preload("Model").
+		Preload("Type").
 		Preload("Model.Brand").
+		Joins("JOIN rent_locations ON cars.location_id = rent_locations.id").
+		Joins("JOIN cities ON rent_locations.city_id = cities.id").
+		Where("cities.name = ?", city).
+		Not("cars.id IN (?)", subQuery).
 		Find(&cars)
 
 	if result.Error != nil {

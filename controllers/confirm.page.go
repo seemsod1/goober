@@ -67,6 +67,22 @@ func (m *Repository) ConfirmBookingPost(w http.ResponseWriter, r *http.Request) 
 	rent.StatusId = 1
 	m.App.DB.Save(&rent)
 
+	var carRent entities.CarHistory
+	res := m.App.DB.Preload("RentInfo").Preload("RentInfo.Return").Preload("RentInfo.Return.City").Preload("RentInfo.Status").Preload("Car").Preload("Car.Location").Preload("Car.Location.City").Table("car_histories").Where("rent_info_id = ?", rent.ID).First(&carRent)
+	if res.Error != nil {
+		m.App.Session.Put(r.Context(), "error", "Failed to find rent info")
+		http.Redirect(w, r, "/my-history", http.StatusSeeOther)
+		return
+	}
+
+	//change in car location
+	res = m.App.DB.Table("cars").Where("id = ?", carRent.CarId).Update("location_id", carRent.RentInfo.Return.ID)
+	if res.Error != nil {
+		m.App.Session.Put(r.Context(), "error", "Failed to update rent status")
+		http.Redirect(w, r, "/my-history", http.StatusSeeOther)
+		return
+	}
+
 	m.App.Session.Remove(r.Context(), "reservation")
 	m.App.Session.Remove(r.Context(), "car_rent")
 	m.App.Session.Remove(r.Context(), "rent")

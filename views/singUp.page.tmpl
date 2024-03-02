@@ -46,14 +46,14 @@
                                                 {{with .Form.Errors.Get "name"}}
                                                     <label class="text-danger">{{.}}</label>
                                                 {{end}}
-                                            <input type="text" id="name" name="name"  autocomplete="off" class="form-control {{with .Form.Errors.Get "name"}} is-invalid {{end}}" placeholder="Vadim" value="" required>
+                                            <input type="text" id="name" name="name"  autocomplete="on" class="form-control {{with .Form.Errors.Get "name"}} is-invalid {{end}}" placeholder="Vadim" value="" required>
                                             </div>
                                             <div class="col">
                                                 <label class="label" for="phone">Phone</label>
                                                 {{with .Form.Errors.Get "phone"}}
                                                 <label class="text-danger">{{.}}</label>
                                                 {{end}}
-                                                <input type="tel" id="phone" autocomplete="off" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}" name="phone" placeholder="e.g., 0501234567" pattern="(\+?38)?(\s?0\d{2}){1}\s?\d{3}\s?\d{2}\s?\d{2}" required>
+                                                <input type="tel" id="phone" autocomplete="on" class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}" name="phone" placeholder="e.g., 0501234567" pattern="(\+?38)?(\s?0\d{2}){1}\s?\d{3}\s?\d{2}\s?\d{2}" required>
                                         </div>
                                     </div>
                                     <div class="form-group mb-3">
@@ -61,7 +61,7 @@
                                         {{with .Form.Errors.Get "email"}}
                                         <label class="text-danger">{{.}}</label>
                                         {{end}}
-                                        <input type="email" id="email" name="email" autocomplete="off" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" placeholder="example@box.com" value="" required>
+                                        <input type="email" id="email" name="email" autocomplete="on" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" placeholder="example@box.com" value="" required>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label class="label" for="password">Password</label>

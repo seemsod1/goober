@@ -26,7 +26,7 @@ func routes() http.Handler {
 		mux.Get("/confirm-booking", controllers.Repo.ConfirmBooking)
 		mux.Post("/confirm-booking", controllers.Repo.ConfirmBookingPost)
 		mux.Get("/my-history", controllers.Repo.MyHistory)
-		mux.Get("/finish-rent/{id}", controllers.Repo.FinishRent)
+		mux.Post("/finish-rent/{id}", controllers.Repo.FinishRent)
 	})
 
 	mux.Get("/logout", controllers.Repo.Logout)

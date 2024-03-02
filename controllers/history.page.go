@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"encoding/json"
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
+	"log"
 	"math"
 	"net/http"
 	"strconv"
@@ -93,6 +95,11 @@ func generatePageNumbers(currentPage, totalPages int) []int {
 	return pages
 }
 
+type jsonResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
 func (m *Repository) FinishRent(w http.ResponseWriter, r *http.Request) {
 	exploded := strings.Split(r.RequestURI, "/")
 
@@ -103,30 +110,37 @@ func (m *Repository) FinishRent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var rent entities.RentInfo
-	res := m.App.DB.Preload("Status").Table("rent_infos").First(&rent, rentId)
+	var carRent entities.CarHistory
+	res := m.App.DB.Preload("RentInfo").Preload("RentInfo.Return").Preload("RentInfo.Return.City").Preload("RentInfo.Status").Preload("Car").Preload("Car.Location").Preload("Car.Location.City").Table("car_histories").Where("rent_info_id = ?", rentId).First(&carRent)
 	if res.Error != nil {
 		m.App.Session.Put(r.Context(), "error", "Failed to find rent info")
 		http.Redirect(w, r, "/my-history", http.StatusSeeOther)
 		return
 	}
 
-	if rent.StatusId != 1 {
+	if carRent.RentInfo.StatusId != 1 {
 		m.App.Session.Put(r.Context(), "error", "Invalid rent status")
 		http.Redirect(w, r, "/my-history", http.StatusSeeOther)
 		return
 	}
 
-	rent.StatusId = 3
-	rent.Status.ID = 3
-	rent.Status.Name = "Finished"
-	res = m.App.DB.Table("rent_infos").Save(&rent)
+	res = m.App.DB.Table("rent_infos").Where("id = ?", rentId).Update("status_id", 3)
 	if res.Error != nil {
 		m.App.Session.Put(r.Context(), "error", "Failed to update rent status")
 		http.Redirect(w, r, "/my-history", http.StatusSeeOther)
 		return
 	}
 
-	m.App.Session.Put(r.Context(), "flash", "Rent finished successfully")
-	http.Redirect(w, r, "/my-history", http.StatusSeeOther)
+	resp := jsonResponse{
+		OK:      true,
+		Message: "Successful finished rent!",
+	}
+
+	out, err := json.MarshalIndent(resp, "", "     ")
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
 }
