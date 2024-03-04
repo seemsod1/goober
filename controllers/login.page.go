@@ -36,6 +36,11 @@ func (m *Repository) UserLogin(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	form.Required("email", "password")
 	form.IsEmail("email")
+	form.MinLength("email", 5)
+	form.Maxlength("email", 100)
+	form.MinLength("password", 3)
+	form.Maxlength("password", 100)
+	form.IsEmail("email")
 
 	if !form.Valid() {
 		render.RenderTemplate(w, r, "login.page.tmpl", &models.TemplateData{

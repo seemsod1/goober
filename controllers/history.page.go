@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"help/helpers"
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
@@ -23,7 +24,7 @@ func (m *Repository) MyHistory(w http.ResponseWriter, r *http.Request) {
 	perPage := 10 // Number of items per page
 
 	var userRents []entities.UserHistory
-	res := m.App.DB.Table("user_histories").Where("user_id = ?", userId).Find(&userRents)
+	res := m.App.DB.Table("user_histories").Where("user_id = ?", userId).Order("created_at desc").Find(&userRents)
 
 	var rents []entities.RentInfo
 
@@ -63,36 +64,12 @@ func (m *Repository) MyHistory(w http.ResponseWriter, r *http.Request) {
 		NextPage:    page + 1,
 		HasPrev:     page > 1,
 		HasNext:     page < totalPages,
-		Pages:       generatePageNumbers(page, totalPages),
+		Pages:       helpers.GeneratePageNumbers(page, totalPages),
 	}
 
 	render.RenderTemplate(w, r, "my-history.page.tmpl", &models.TemplateData{
 		Data: data,
 	})
-}
-
-// Helper function to generate page numbers for pagination links
-func generatePageNumbers(currentPage, totalPages int) []int {
-	var pages []int
-
-	// You can customize how many pages you want to show in the pagination bar
-	maxPages := 5
-	start := currentPage - maxPages/2
-	end := currentPage + maxPages/2
-
-	if start < 1 {
-		start = 1
-	}
-
-	if end > totalPages {
-		end = totalPages
-	}
-
-	for i := start; i <= end; i++ {
-		pages = append(pages, i)
-	}
-
-	return pages
 }
 
 type jsonResponse struct {

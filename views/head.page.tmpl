@@ -63,3 +63,35 @@
     </div>
   </div>
 {{end}}
+
+{{define "js"}}
+<script>
+
+  function notifyModal(title, icon) {
+    Swal.fire({
+      toast: true,
+      showConfirmButton: false,
+      timerProgressBar: true,
+      position: 'bottom-end',
+      title: title,
+      icon: icon,
+      timer: 3000
+    })
+  }
+
+  {{with .Error}}
+  console.log("error sent")
+  notifyModal("{{.}}", "error");
+  {{end}}
+
+  {{with .Flash}}
+  notifyModal("{{.}}", "success");
+  {{end}}
+
+  {{with .Warning}}
+  notifyModal("{{.}}", "warning");
+  {{end}}
+</script>
+
+
+{{end}}

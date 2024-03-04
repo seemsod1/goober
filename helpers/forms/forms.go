@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -102,4 +103,31 @@ func (f *Form) IsPlate(field string) {
 		f.Errors.Add(field, "Invalid plate number")
 	}
 
+}
+
+func (f *Form) IsName(field string) {
+	pattern := "^(?!\\s+$)[a-zA-Zа-яА-Я\\sіІґҐєЄїЇ]+$"
+
+	if match, _ := regexp.MatchString(pattern, f.Get(field)); !match {
+		f.Errors.Add(field, "Invalid name")
+	}
+
+}
+
+func (f Form) MinNumber(field string, number int) {
+	if f.Has(field) {
+		x, _ := strconv.Atoi(f.Get(field))
+		if x < number {
+			f.Errors.Add(field, fmt.Sprintf("This field must be at least %d", number))
+		}
+	}
+}
+
+func (f Form) MaxNumber(field string, number int) {
+	if f.Has(field) {
+		x, _ := strconv.Atoi(f.Get(field))
+		if x > number {
+			f.Errors.Add(field, fmt.Sprintf("This field must be at most %d", number))
+		}
+	}
 }

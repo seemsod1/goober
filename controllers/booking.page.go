@@ -37,8 +37,12 @@ func (m *Repository) MakeBooking(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-
-	rent.Price = car.Price
+	if rent.EndDate == rent.StartDate {
+		rent.Price = car.Price
+	} else {
+		difference := rent.EndDate.Sub(rent.StartDate).Hours() / 24
+		rent.Price = car.Price * float64(difference)
+	}
 	rent.From = car.Location
 	rent.FromId = car.LocationId
 

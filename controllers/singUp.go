@@ -35,6 +35,13 @@ func (m *Repository) UserSingUp(w http.ResponseWriter, r *http.Request) {
 	form.Required("email", "password", "name", "phone")
 	form.IsEmail("email")
 	form.IsPhone("phone")
+	form.MinLength("email", 5)
+	form.Maxlength("email", 100)
+	form.MinLength("password", 3)
+	form.Maxlength("password", 100)
+	form.MinLength("name", 1)
+	form.Maxlength("name", 60)
+	form.IsName("name")
 
 	if !form.Valid() {
 		render.RenderTemplate(w, r, "signUp.page.tmpl", &models.TemplateData{
@@ -50,7 +57,7 @@ func (m *Repository) UserSingUp(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/join/singUp", http.StatusSeeOther)
 		return
 	}
-	//if user exists
+	//if user don't exists
 
 	user = entities.User{
 		Name:     name,

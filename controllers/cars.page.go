@@ -59,28 +59,37 @@ func (m *Repository) CarsPagePost(w http.ResponseWriter, r *http.Request) {
 
 	var cars []entities.Car
 
-	//result := m.App.DB.Raw("SELECT    c.ID,c.model_id,c.type_id,c.location_id,    c.Plate,    c.Price,    c.Color,    c.Bags,    c.Passengers,    c.Year FROM cars c        LEFT JOIN car_histories ch ON c.ID = ch.Car_Id        LEFT JOIN rent_infos r ON ch.rent_info_id = r.ID         LEFT JOIN cities l ON c.location_id = l.ID WHERE l.name = ?  AND (r.ID IS NULL OR (r.Start_Date > ? OR r.End_Date < ?))ORDER BY c.ID", city, endDate, startDate).Scan(&cars)
+	//result := m.App.DB.Raw("SELECT \"cars\".\"id\", \"cars\".\"type_id\", \"cars\".\"model_id\", \"cars\".\"bags\", \"cars\".\"passengers\", \"cars\".\"year\", \"cars\".\"plate\", \"cars\".\"price\", \"cars\".\"color\", \"cars\".\"location_id\", \"cars\".\"available\", \"cars\".\"created_at\", \"cars\".\"updated_at\" FROM \"cars\" JOIN rent_locations ON cars.location_id = rent_locations.id JOIN cities ON rent_locations.city_id = cities.id WHERE cities.name = ? AND NOT cars.id IN ( SELECT DISTINCT car_id FROM \"car_histories\" JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id WHERE rent_infos.status_id IN (4, 1) AND (  (? BETWEEN DATE(rent_infos.start_date) AND DATE(rent_infos.end_date))     OR (? BETWEEN DATE(rent_infos.start_date) AND DATE(rent_infos.end_date)) OR (DATE(rent_infos.start_date) <= ? AND DATE(rent_infos.end_date) >= ?) ))", city, startDate, endDate, startDate, endDate).Scan(&cars)
 
-	subQuery := m.App.DB.
-		Table("car_histories").
-		Select("DISTINCT car_id").
-		Joins("JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id").
-		Where("rent_infos.status_id IN (?,?)", 4, 1).
-		Not("(rent_infos.end_date <= ? OR rent_infos.start_date >= ?)", startDate, endDate)
+	//subQuery := m.App.DB.
+	//	Table("car_histories").
+	//	Select("DISTINCT car_id").
+	//	Joins("JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id").
+	//	Where("rent_infos.status_id IN (?,?)", 4, 1).
+	//	Not("(rent_infos.end_date <= ? OR rent_infos.start_date >= ?) AND ((rent_infos.end_date < ? OR rent_infos.start_date > ?) AND DATE(rent_infos.end_date) != DATE(rent_infos.start_date))", startDate, startDate, startDate, startDate)
 
 	// Main query to find available cars in Kyiv during the specified time period
 	result := m.App.DB.
 		Debug().
-		Table("cars").
 		Preload("Location").
 		Preload("Location.City").
 		Preload("Model").
-		Preload("Type").
 		Preload("Model.Brand").
+		Preload("Type").
+		Table("cars").
+		Select("cars.*").
 		Joins("JOIN rent_locations ON cars.location_id = rent_locations.id").
 		Joins("JOIN cities ON rent_locations.city_id = cities.id").
 		Where("cities.name = ?", city).
-		Not("cars.id IN (?)", subQuery).
+		Not("cars.id IN (?)", m.App.DB.Table("car_histories").
+			Select("DISTINCT car_id").
+			Joins("JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id").
+			Where("rent_infos.status_id IN (?)", []int{4, 1}).
+			Where(
+				"(? BETWEEN DATE(rent_infos.start_date) AND DATE(rent_infos.end_date)) OR "+
+					"(? BETWEEN DATE(rent_infos.start_date) AND DATE(rent_infos.end_date)) OR "+
+					"(DATE(rent_infos.start_date) <= ? AND DATE(rent_infos.end_date) >= ?)", startDate, endDate, startDate, endDate),
+		).
 		Find(&cars)
 
 	if result.Error != nil {
@@ -158,6 +167,7 @@ func (m *Repository) ChooseCar(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+
 	rent.StatusId = 4
 	rent.FromId = 1
 	rent.ReturnId = 1

@@ -12,10 +12,12 @@ import (
 )
 
 func (m *Repository) AddCar(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "head-add-car.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, r, "head-add-car.page.tmpl", &models.TemplateData{
+		Form: forms.New(nil),
+	})
 }
 
-func (m *Repository) GetBrands(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) GetBrandsWithTypes(w http.ResponseWriter, r *http.Request) {
 	var brands []entities.CarBrand
 
 	result := m.App.DB.
@@ -78,9 +80,17 @@ func (m *Repository) AddCarPost(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	form.Required("SelectBrand", "SelectModel", "SelectType", "inputBags", "inputPassengers", "year", "price", "plate", "color")
 	form.IsNumber("inputBags")
+	form.MinNumber("inputBags", 1)
+	form.MaxNumber("inputBags", 6)
 	form.IsNumber("inputPassengers")
+	form.MinNumber("inputPassengers", 2)
+	form.MaxNumber("inputPassengers", 6)
 	form.IsNumber("year")
+	form.MinNumber("year", 1950)
+	form.MaxNumber("year", time.Now().Year())
 	form.IsNumber("price")
+	form.MinNumber("price", 1)
+	form.MaxNumber("price", 10000)
 	form.IsPlate("plate")
 
 	if !form.Valid() {
@@ -100,23 +110,23 @@ func (m *Repository) AddCarPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	bagsInt, err := strconv.Atoi(bags)
-	if err != nil || bagsInt < 1 || bagsInt > 6 {
+	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Invalid bags")
 		return
 	}
 	passengersInt, err := strconv.Atoi(passengers)
-	if err != nil || passengersInt < 2 || passengersInt > 6 {
+	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Invalid passengers")
 		return
 	}
 
 	yearInt, err := strconv.Atoi(year)
-	if err != nil || yearInt < 1950 || yearInt > time.Now().Year() {
+	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Invalid year")
 		return
 	}
 	priceInt, err := strconv.Atoi(price)
-	if err != nil || priceInt < 1 || priceInt > 10000 {
+	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Invalid price")
 		return
 	}

@@ -20,6 +20,7 @@ func routes() http.Handler {
 	})
 	mux.Group(func(mux chi.Router) {
 		mux.Use(RequireAuth)
+		mux.Use(User)
 		mux.Get("/choose-car/{id}", controllers.Repo.ChooseCar)
 		mux.Get("/make-booking", controllers.Repo.MakeBooking)
 		mux.Post("/make-booking", controllers.Repo.MakeBookingPost)
@@ -48,9 +49,21 @@ func routes() http.Handler {
 	head.Use(RequireAuth)
 	head.Use(NoSurf)
 
+	//TODO: add view car history
+	head.Get("/car-history/{id}", controllers.Repo.CarHistory)
+
+	//TODO: add view cars
+	head.Get("/all-cars", controllers.Repo.AllCars)
+
+	head.Get("/rents-histories", controllers.Repo.RentsHistories)
+
+	head.Get("/add-car-model", controllers.Repo.AddCarModel)
+	head.Post("/add-car-model", controllers.Repo.AddCarModelPost)
+
 	head.Get("/", controllers.Repo.HeadPage)
 	head.Get("/add-car", controllers.Repo.AddCar)
-	head.Get("/get-brands", controllers.Repo.GetBrands)
+	head.Get("/get-brands-with-types", controllers.Repo.GetBrandsWithTypes)
+	head.Get("/get-brands", controllers.Repo.GetAllBrands)
 	head.Get("/get-models", controllers.Repo.GetModels)
 	head.Get("/get-types", controllers.Repo.GetTypes)
 	head.Post("/add-car", controllers.Repo.AddCarPost)

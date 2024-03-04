@@ -31,8 +31,14 @@
                                     <td>{{.RentInfo.EndDate.Format "2006-01-02"}}</td>
                                     <td>{{.RentInfo.From.City.Name}},{{.RentInfo.From.FullAddress}}</td>
                                     <td>{{.RentInfo.Return.City.Name}},{{.RentInfo.Return.FullAddress}}</td>
-                                    <td>{{.RentInfo.Price}}</td>
-                                    <td id="status-{{.RentInfo.ID}}">{{.RentInfo.Status.Name}}</td>
+                                    <td>{{.RentInfo.Price}}$</td>
+                                    {{if eq .RentInfo.Status.Name "Active"}}
+                                    <td id="status-{{.RentInfo.ID}}"><span class="badge text-bg-warning">{{.RentInfo.Status.Name}}</span></td>
+                                    {{else if eq .RentInfo.Status.Name "Finished"}}
+                                    <td id="status-{{.RentInfo.ID}}"><span class="badge text-bg-success">{{.RentInfo.Status.Name}}</span></td>
+                                    {{else}}
+                                    <td id="status-{{.RentInfo.ID}}"><span class="badge text-bg-danger">{{.RentInfo.Status.Name}}</span></td>
+                                    {{end}}
                                     <td>
                                         {{if eq .RentInfo.Status.Name "Active"}}
                                             <a id="finish-btn-{{.RentInfo.ID}}" href="#" class="btn btn-dark" onclick="confirmFinish('{{.RentInfo.ID}}')">Finish</a>
@@ -102,7 +108,7 @@
                                 // Update the table without reloading the page
                                 const statusCell = document.getElementById('status-' + rentInfoID);
                                 if (statusCell) {
-                                    statusCell.textContent = 'Finished';
+                                    statusCell.innerHTML = '<span class="badge text-bg-success">Finished</span>';
                                 }
 
                                 // Hide the "Finish" button

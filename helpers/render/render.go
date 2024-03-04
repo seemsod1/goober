@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/justinas/nosurf"
 	models "help/models/app_models"
+	"help/models/entities"
 	"html/template"
 	"log"
 	"net/http"
@@ -42,6 +43,11 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 	td.Error = app.Session.PopString(r.Context(), "error")
 	if app.Session.Exists(r.Context(), "user_role") {
 		td.Role = app.Session.GetInt(r.Context(), "user_role")
+	}
+	if app.Session.GetInt(r.Context(), "user_role") == 2 {
+		var location entities.RentLocation
+		app.DB.Table("rent_locations").Preload("City").Where("user_id = ?", app.Session.GetInt(r.Context(), "user_id")).Take(&location)
+		td.Location = location.City.Name + ", " + location.FullAddress
 	}
 
 	td.CSRFToken = nosurf.Token(r)

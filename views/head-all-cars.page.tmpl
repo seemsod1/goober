@@ -1,0 +1,226 @@
+{{template "head" .}}
+
+{{define "css"}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker-bs5.min.css">
+
+{{end}}
+
+
+{{define "content"}}
+    <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+        <div class="card-body">
+    <h4 class="card-title">Cars</h4>
+    {{if not .Data.cars}}
+        <p class="text-center">No cars at location.</p>
+    {{else}}
+        <div class="row row-cols-1 row-cols-md-3">
+            {{range .Data.cars}}
+                <div class="col mb-4">
+                    <div class="card h-100 border-{{if eq .Available true}}success{{else}}warning{{end}}">
+                        <img src="/resources/img/cars/{{.Model.Name}}.png" class="card-img-top" alt="{{.Model.Brand.Name}} {{.Model.Name}}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title mt-auto">{{.Model.Brand.Name}} {{.Model.Name}} <span class="badge text-bg-{{if eq .Available true}}success{{else}}warning{{end}}">{{if eq .Available true}}Available{{else}}In rent{{end}}</span></h5>
+                            <p class="card-text" >
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="card-text">Color: {{.Color}}</p>
+                                    <p class="card-text">Price: {{.Price}}$/day</p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="card-text">Year: {{.Year}}</p>
+                                    <p class="card-text">Plate: {{.Plate}}</p>
+                                </div>
+                            </div>
+
+                            </p>
+                            <a id="view-history-btn-{{.ID}}" href="#" class="btn btn-dark" onclick="viewHistory('{{.ID}}')">View History</a>
+                        </div>
+                    </div>
+                </div>
+            {{end}}
+        </div>
+        {{if .Data.pagination.TotalPages}}
+            <ul class="pagination justify-content-center mt-4 mb-0">
+                {{if .Data.pagination.HasPrev}}
+                    <li class="page-item"> <a class="page-link" href="?page={{.Data.pagination.PrevPage}}"><i class="fas fa-angle-left"></i></a> </li>
+                {{else}}
+                    <li class="page-item disabled"> <span class="page-link"><i class="fas fa-angle-left"></i></span> </li>
+                {{end}}
+
+                {{range .Data.pagination.Pages}}
+                    {{if eq . $.Data.pagination.CurrentPage}}
+                        <li class="page-item active"><span class="page-link">{{.}}</span></li>
+                    {{else}}
+                        <li class="page-item"><a class="page-link" href="?page={{.}}">{{.}}</a></li>
+                    {{end}}
+                {{end}}
+
+                {{if .Data.pagination.HasNext}}
+                    <li class="page-item"> <a class="page-link" href="?page={{.Data.pagination.NextPage}}"><i class="fas fa-angle-right"></i></a> </li>
+                {{else}}
+                    <li class="page-item disabled"> <span class="page-link"><i class="fas fa-angle-right"></i></span> </li>
+                {{end}}
+            </ul>
+        {{end}}
+        </div>
+        </div>
+        </div>
+    {{end}}
+{{end}}
+
+{{define "js"}}
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
+    <script>
+        function notifyModal(title, icon) {
+            Swal.fire({
+                toast: true,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                position: 'bottom-end',
+                title: title,
+                icon: icon,
+                timer: 3000
+            })
+        }
+        {{with .Error}}
+        console.log("error sent")
+        notifyModal("{{.}}", "error");
+        {{end}}
+
+        {{with .Flash}}
+        notifyModal("{{.}}", "success");
+        {{end}}
+
+        {{with .Warning}}
+        notifyModal("{{.}}", "warning");
+        {{end}}
+
+        function viewHistory(carId) {
+            fetch(`/head/car-history/${carId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error fetching car history: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(response => {
+                    console.log("Car history fetched:", response);
+                    renderHistoryModal(response,carId);
+                })
+                .catch(error => {
+                    console.error("Error fetching car history:", error);
+                });
+        }
+
+        function renderHistoryModal(responseData,carId) {
+            let modalContent = '';
+
+            const carHistories = responseData.carHistories;
+            const pagination = responseData.pagination;
+
+            if (!carHistories || carHistories.length === 0) {
+                modalContent = '<p class="text-center">No rent history available.</p>';
+            } else {
+                modalContent += '<div class="table-responsive text-center">';
+                modalContent += '<table class="table table-bordered">';
+                modalContent += '<thead>';
+                modalContent += '<tr>';
+                modalContent += '<th scope="col">Car</th>';
+                modalContent += '<th scope="col">Start Date</th>';
+                modalContent += '<th scope="col">End Date</th>';
+                modalContent += '<th scope="col">From</th>';
+                modalContent += '<th scope="col">Return</th>';
+                modalContent += '<th scope="col">Price</th>';
+                modalContent += '<th scope="col">Status</th>';
+                modalContent += '</tr>';
+                modalContent += '</thead>';
+                modalContent += '<tbody>';
+
+                carHistories.forEach(entry => {
+                    modalContent += '<tr>';
+                    modalContent += `<td>${entry.Car.Model.Brand.Name} ${entry.Car.Model.Name}</td>`;
+                    modalContent += `<td>${entry.RentInfo.StartDate}</td>`;
+                    modalContent += `<td>${entry.RentInfo.EndDate}</td>`;
+                    modalContent += `<td>${entry.RentInfo.From.City.Name}, ${entry.RentInfo.From.FullAddress}</td>`;
+                    modalContent += `<td>${entry.RentInfo.Return.City.Name}, ${entry.RentInfo.Return.FullAddress}</td>`;
+                    modalContent += `<td>${entry.RentInfo.Price}$</td>`;
+
+                    if (entry.RentInfo.Status.Name === "Active") {
+                        modalContent += `<td id="status-${entry.RentInfo.ID}"><span class="badge text-bg-warning">${entry.RentInfo.Status.Name}</span></td>`;
+                    } else if (entry.RentInfo.Status.Name === "Finished") {
+                        modalContent += `<td id="status-${entry.RentInfo.ID}"><span class="badge text-bg-success">${entry.RentInfo.Status.Name}</span></td>`;
+                    } else {
+                        modalContent += `<td id="status-${entry.RentInfo.ID}"><span class="badge text-bg-danger">${entry.RentInfo.Status.Name}</span></td>`;
+                        modalContent += '<td><p></p></td>';
+                    }
+
+                    modalContent += '</tr>';
+                });
+
+                modalContent += '</tbody>';
+                modalContent += '</table>';
+                modalContent += '</div>';
+            }
+
+            if (pagination && pagination.TotalPages) {
+                modalContent += '<ul class="pagination justify-content-center mt-4 mb-0">';
+
+                if (pagination.HasPrev) {
+                    modalContent += '<li class="page-item"> <a class="page-link" onclick="event.preventDefault(); goToPage(' + pagination.PrevPage + ',' + carId + ')"><i class="fas fa-angle-left"></i></a> </li>';
+                } else {
+                    modalContent += '<li class="page-item disabled"> <span class="page-link"><i class="fas fa-angle-left"></i></span> </li>';
+                }
+
+                pagination.Pages.forEach(pageNum => {
+                    if (pageNum === pagination.CurrentPage) {
+                        modalContent += '<li class="page-item active"><span class="page-link">' + pageNum + '</span></li>';
+                    } else {
+                        modalContent += '<li class="page-item"><a class="page-link" href="#" onclick="event.preventDefault(); goToPage(' + pageNum + ',' + carId + ')">' + pageNum + '</a></li>';
+                    }
+                });
+
+                if (pagination.HasNext) {
+                    modalContent += '<li class="page-item"> <a class="page-link" onclick="event.preventDefault(); goToPage(' + pagination.NextPage + ',' + carId + ')"><i class="fas fa-angle-right"></i></a> </li>';
+                } else {
+                    modalContent += '<li class="page-item disabled"> <span class="page-link"><i class="fas fa-angle-right"></i></span> </li>';
+                }
+
+                modalContent += '</ul>';
+            }
+
+            Swal.fire({
+                title: 'Car Rental History',
+                html: modalContent,
+                showCloseButton: true,
+                showConfirmButton: false,
+                width: '80%'
+            });
+        }
+
+        function goToPage(pageNum,carId) {
+            console.log();
+            fetch(`/head/car-history/${carId}?page=${pageNum}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error fetching car history: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(response => {
+                    console.log("Car history fetched:", response);
+                    renderHistoryModal(response,carId);
+                })
+                .catch(error => {
+                    console.error("Error fetching car history:", error);
+                });
+        }
+
+
+
+
+
+
+    </script>
+{{end}}
