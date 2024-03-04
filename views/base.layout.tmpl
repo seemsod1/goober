@@ -50,16 +50,16 @@
                 </ul>
 
 
-                {{if ne .PermissionLevel 0}}
+                {{if ne .Role 0}}
                     <div class="dropdown">
                         <a id="profileDropDown" class="nav-link dropdown-toggle link-body-emphasis bg-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="/resources/img/24.jpg" width="55" height="55" class="rounded-circle" alt="Profile Photo">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-                            {{if eq .PermissionLevel 1}}
+                            {{if eq .Role 1}}
                             <li><a class="dropdown-item" href="#">Admin Dashboard</a></li>
-                            {{else if eq .PermissionLevel 2}}}
-                            <li><a class="dropdown-item" href="#">Manager Dashboard</a></li>
+                            {{else if eq .Role 2}}
+                            <li><a class="dropdown-item" href="/head/">Manager Dashboard</a></li>
                             {{else}}
                             <li><a class="dropdown-item" href="/my-history">My History</a></li>
                             <li><a class="dropdown-item" href="#">Change password</a></li>

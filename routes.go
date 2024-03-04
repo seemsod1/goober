@@ -29,8 +29,6 @@ func routes() http.Handler {
 		mux.Post("/finish-rent/{id}", controllers.Repo.FinishRent)
 	})
 
-	mux.Get("/logout", controllers.Repo.Logout)
-
 	join := chi.NewRouter()
 	join.Use(SessionLoad)
 	join.Group(func(join chi.Router) {
@@ -43,6 +41,21 @@ func routes() http.Handler {
 
 	join.Get("/logout", controllers.Repo.Logout)
 	mux.Mount("/join", join)
+
+	head := chi.NewRouter()
+	head.Use(SessionLoad)
+	head.Use(Head)
+	head.Use(RequireAuth)
+	head.Use(NoSurf)
+
+	head.Get("/", controllers.Repo.HeadPage)
+	head.Get("/add-car", controllers.Repo.AddCar)
+	head.Get("/get-brands", controllers.Repo.GetBrands)
+	head.Get("/get-models", controllers.Repo.GetModels)
+	head.Get("/get-types", controllers.Repo.GetTypes)
+	head.Post("/add-car", controllers.Repo.AddCarPost)
+
+	mux.Mount("/head", head)
 
 	fileServer := http.FileServer(http.Dir("./resources/"))
 	mux.Handle("/resources/*", http.StripPrefix("/resources", fileServer))

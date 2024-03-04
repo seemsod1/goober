@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"net/url"
+	"regexp"
 	"strings"
 )
 
@@ -81,6 +82,24 @@ func (f *Form) IsPhone(field string) {
 
 	if err := validate.Var(f.Get(field), "e164"); err != nil {
 		f.Errors.Add(field, "Invalid email address")
+	}
+
+}
+
+func (f *Form) IsNumber(field string) {
+	var validate *validator.Validate
+	validate = validator.New(validator.WithRequiredStructEnabled())
+
+	if err := validate.Var(f.Get(field), "number"); err != nil {
+		f.Errors.Add(field, "This field must be a number")
+	}
+}
+
+func (f *Form) IsPlate(field string) {
+	pattern := "^[A-Za-z]{2}\\d{4}[A-Za-z]{2}$"
+
+	if match, _ := regexp.MatchString(pattern, f.Get(field)); !match {
+		f.Errors.Add(field, "Invalid plate number")
 	}
 
 }

@@ -35,3 +35,36 @@ func RequireAuth(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func User(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if app.Session.Exists(r.Context(), "user_role") && app.Session.GetInt(r.Context(), "user_role") != 3 {
+			app.Session.Put(r.Context(), "error", "You don't have permission to access this page!")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func Head(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if app.Session.Exists(r.Context(), "user_role") && app.Session.GetInt(r.Context(), "user_role") != 2 {
+			app.Session.Put(r.Context(), "error", "You don't have permission to access this page!")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func Admin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if app.Session.Exists(r.Context(), "user_role") && app.Session.GetInt(r.Context(), "user_role") != 1 {
+			app.Session.Put(r.Context(), "error", "You don't have permission to access this page!")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
