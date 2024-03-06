@@ -4,6 +4,8 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
+	"github.com/go-co-op/gocron/v2"
+	"github.com/google/uuid"
 	"help/controllers"
 	"help/helpers/render"
 	"help/initializers"
@@ -23,6 +25,7 @@ var app models.AppConfig
 var session *scs.SessionManager
 
 func main() {
+
 	app.DB = initializers.ConnectToDatabase()
 	initializers.SyncDB(app.DB)
 	//initializers.Migration(app.DB)
@@ -31,6 +34,7 @@ func main() {
 	gob.Register(entities.RentInfo{})
 	gob.Register(entities.CarHistory{})
 	gob.Register(entities.UserHistory{})
+	gob.Register(uuid.UUID{})
 
 	app.InProduction = false
 
@@ -48,6 +52,12 @@ func main() {
 	}
 	app.TemplateCache = tc
 	app.UseCache = false
+
+	app.Scheduler, err = gocron.NewScheduler()
+	if err != nil {
+		log.Fatal("cannot create scheduler")
+	}
+	app.Scheduler.Start()
 
 	repo := controllers.NewRepo(&app)
 	controllers.NewControllers(repo)

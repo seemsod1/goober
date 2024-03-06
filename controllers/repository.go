@@ -38,4 +38,8 @@ func (m *Repository) ClearSessionData(r *http.Request) {
 	if ok {
 		m.App.Session.Remove(r.Context(), "user_rent")
 	}
+	_, ok = m.App.Session.Get(r.Context(), "task").(entities.UserHistory)
+	if ok {
+		m.App.Session.Remove(r.Context(), "task")
+	}
 }

@@ -1,19 +1,39 @@
 package controllers
 
 import (
+	"github.com/google/uuid"
 	"help/helpers/forms"
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 func (m *Repository) MakeBooking(w http.ResponseWriter, r *http.Request) {
-	rent, ok := m.App.Session.Get(r.Context(), "rent").(entities.RentInfo)
-	if !ok || rent.StatusId != 4 {
+	job, ok := m.App.Session.Get(r.Context(), "task").(uuid.UUID)
+	if !ok {
 		m.ClearSessionData(r)
+		m.App.Session.Put(r.Context(), "error", "Timeout! Please try again")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	flag := false
+	jobs := m.App.Scheduler.Jobs()
+	for _, j := range jobs {
+		if j.ID() == job {
+			flag = true
+		}
+	}
+	if !flag {
+		m.ClearSessionData(r)
+		m.App.Session.Put(r.Context(), "error", "Timeout! Please try again")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	rent, ok := m.App.Session.Get(r.Context(), "rent").(entities.RentInfo)
+	if !ok {
 		m.App.Session.Put(r.Context(), "error", "can't get reservation from session")
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -55,14 +75,6 @@ func (m *Repository) MakeBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	m.App.Session.Put(r.Context(), "rent", rent)
-	time.AfterFunc(1*time.Minute, func() {
-		_ = m.App.DB.Model(&entities.RentInfo{}).
-			Where("status_id = ? AND created_at < ? AND id = ?", 4, time.Now().Add(-1*time.Minute), rent.ID).
-			Updates(map[string]interface{}{"status_id": 2})
-		re, _ := m.App.Session.Get(r.Context(), "rent").(entities.RentInfo)
-		re.StatusId = 2
-		m.App.Session.Put(r.Context(), "rent", re)
-	})
 
 	sd := rent.StartDate.Format("2006-01-02")
 	ed := rent.EndDate.Format("2006-01-02")
@@ -85,6 +97,27 @@ func (m *Repository) MakeBooking(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) MakeBookingPost(w http.ResponseWriter, r *http.Request) {
+	job, ok := m.App.Session.Get(r.Context(), "task").(uuid.UUID)
+	if !ok {
+		m.ClearSessionData(r)
+		m.App.Session.Put(r.Context(), "error", "Timeout! Please try again")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	flag := false
+	jobs := m.App.Scheduler.Jobs()
+	for _, j := range jobs {
+		if j.ID() == job {
+			flag = true
+		}
+	}
+	if !flag {
+		m.ClearSessionData(r)
+		m.App.Session.Put(r.Context(), "error", "Timeout! Please try again")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Can't parse form", http.StatusBadRequest)

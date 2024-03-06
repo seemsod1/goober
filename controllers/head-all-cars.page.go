@@ -53,7 +53,6 @@ func (m *Repository) AllCars(w http.ResponseWriter, r *http.Request) {
 
 	var availableCars []entities.Car
 	res = m.App.DB.
-		Debug().
 		Preload("Location").
 		Preload("Location.City").
 		Preload("Model").

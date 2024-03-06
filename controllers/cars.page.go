@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"github.com/go-co-op/gocron/v2"
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -59,18 +61,7 @@ func (m *Repository) CarsPagePost(w http.ResponseWriter, r *http.Request) {
 
 	var cars []entities.Car
 
-	//result := m.App.DB.Raw("SELECT \"cars\".\"id\", \"cars\".\"type_id\", \"cars\".\"model_id\", \"cars\".\"bags\", \"cars\".\"passengers\", \"cars\".\"year\", \"cars\".\"plate\", \"cars\".\"price\", \"cars\".\"color\", \"cars\".\"location_id\", \"cars\".\"available\", \"cars\".\"created_at\", \"cars\".\"updated_at\" FROM \"cars\" JOIN rent_locations ON cars.location_id = rent_locations.id JOIN cities ON rent_locations.city_id = cities.id WHERE cities.name = ? AND NOT cars.id IN ( SELECT DISTINCT car_id FROM \"car_histories\" JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id WHERE rent_infos.status_id IN (4, 1) AND (  (? BETWEEN DATE(rent_infos.start_date) AND DATE(rent_infos.end_date))     OR (? BETWEEN DATE(rent_infos.start_date) AND DATE(rent_infos.end_date)) OR (DATE(rent_infos.start_date) <= ? AND DATE(rent_infos.end_date) >= ?) ))", city, startDate, endDate, startDate, endDate).Scan(&cars)
-
-	//subQuery := m.App.DB.
-	//	Table("car_histories").
-	//	Select("DISTINCT car_id").
-	//	Joins("JOIN rent_infos ON car_histories.rent_info_id = rent_infos.id").
-	//	Where("rent_infos.status_id IN (?,?)", 4, 1).
-	//	Not("(rent_infos.end_date <= ? OR rent_infos.start_date >= ?) AND ((rent_infos.end_date < ? OR rent_infos.start_date > ?) AND DATE(rent_infos.end_date) != DATE(rent_infos.start_date))", startDate, startDate, startDate, startDate)
-
-	// Main query to find available cars in Kyiv during the specified time period
 	result := m.App.DB.
-		Debug().
 		Preload("Location").
 		Preload("Location.City").
 		Preload("Model").
@@ -206,6 +197,22 @@ func (m *Repository) ChooseCar(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
+
+	j, err := m.App.Scheduler.NewJob(
+		gocron.DurationJob(
+			time.Minute*1,
+		),
+		gocron.NewTask(func() {
+			_ = m.App.DB.Model(&entities.RentInfo{}).
+				Where("status_id = ? AND id = ?", 4, rent.ID).
+				Updates(map[string]interface{}{"status_id": 2})
+			m.App.Session.Put(r.Context(), "error", "Time is up! Your reservation has been canceled!")
+			log.Println("Task is done!")
+		}),
+		gocron.WithLimitedRuns(1),
+	)
+	m.App.Session.Put(r.Context(), "task", j.ID())
+	log.Println("Job ID: ", j.ID())
 
 	userHistory := entities.UserHistory{UserID: userId, RentInfoID: rent.ID}
 	carHistory := entities.CarHistory{CarId: carId, RentInfoId: rent.ID}
