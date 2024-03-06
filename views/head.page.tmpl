@@ -18,10 +18,20 @@
         <div class="card-body">
           <p class="card-title text-md-center text-xl-left">Rents</p>
           <div class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">34040</h3>
-            <i class="ti-calendar icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{.Data.Rents}}</h3>
+            <i class="ti-agenda icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
           </div>
-          <p class="mb-0 mt-2 text-danger">0.12% <span class="text-black ms-1"><small>(30 days)</small></span></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-title text-md-center text-xl-left">Cancels</p>
+          <div class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{.Data.Cancelled}}</h3>
+            <i class="ti-close icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -30,34 +40,105 @@
         <div class="card-body">
           <p class="card-title text-md-center text-xl-left">Revenue</p>
           <div class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">47033</h3>
-            <i class="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{.Data.Revenue}}</h3>
+            <i class="ti-credit-card icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
           </div>
-          <p class="mb-0 mt-2 text-danger">0.47% <span class="text-black ms-1"><small>(30 days)</small></span></p>
         </div>
       </div>
     </div>
     <div class="col-md-3 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <p class="card-title text-md-center text-xl-left">Downloads</p>
+          <p class="card-title text-md-center text-xl-left">Cars</p>
           <div class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">40016</h3>
-            <i class="ti-agenda icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">{{.Data.Cars}}</h3>
+            <i class="ti-car icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
           </div>
-          <p class="mb-0 mt-2 text-success">64.00%<span class="text-black ms-1"><small>(30 days)</small></span></p>
         </div>
       </div>
     </div>
-    <div class="col-md-3 grid-margin stretch-card">
-      <div class="card">
+  </div>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card position-relative">
         <div class="card-body">
-          <p class="card-title text-md-center text-xl-left">Returns</p>
-          <div class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-            <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">61344</h3>
-            <i class="ti-layers-alt icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+          <p class="card-title">Detailed Reports</p>
+          <div class="row">
+            <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-center">
+              <div class="ml-xl-4">
+                <h1>{{.Data.Rents}}</h1>
+                <h3 class="font-weight-light mb-xl-4">Rents</h3>
+                <p class="text-muted mb-2 mb-xl-0">The total number of rents within the date range. It is the period time a user is actively engaged with your website, page or app, etc</p>
+              </div>
+            </div>
+            <div class="col-md-12 col-xl-9">
+              <div class="row">
+                <div class="col-md-6 mt-3 col-xl-5">
+                  <div id="donutchart" ></div>
+                </div>
+                <div class="col-md-6 col-xl-7">
+                  <div class="table-responsive mb-3 mb-md-0">
+                    <table class="table table-borderless report-table">
+                      <tr>
+                        <td class="text-muted">Illinois</td>
+                        <td class="w-100 px-0">
+                          <div class="progress progress-md mx-4">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                        <td><h5 class="font-weight-bold mb-0">524</h5></td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">Washington</td>
+                        <td class="w-100 px-0">
+                          <div class="progress progress-md mx-4">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                        <td><h5 class="font-weight-bold mb-0">722</h5></td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">Mississippi</td>
+                        <td class="w-100 px-0">
+                          <div class="progress progress-md mx-4">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                        <td><h5 class="font-weight-bold mb-0">173</h5></td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">California</td>
+                        <td class="w-100 px-0">
+                          <div class="progress progress-md mx-4">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                        <td><h5 class="font-weight-bold mb-0">945</h5></td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">Maryland</td>
+                        <td class="w-100 px-0">
+                          <div class="progress progress-md mx-4">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                        <td><h5 class="font-weight-bold mb-0">553</h5></td>
+                      </tr>
+                      <tr>
+                        <td class="text-muted">Alaska</td>
+                        <td class="w-100 px-0">
+                          <div class="progress progress-md mx-4">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                        </td>
+                        <td><h5 class="font-weight-bold mb-0">912</h5></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="mb-0 mt-2 text-success">23.00%<span class="text-black ms-1"><small>(30 days)</small></span></p>
         </div>
       </div>
     </div>
@@ -65,7 +146,39 @@
 {{end}}
 
 {{define "js"}}
-<script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+      let cancelled = {{.Data.Cancelled}};
+      let finished = {{.Data.Rents}};
+
+      cancelled = isNaN(cancelled) ? 0 : cancelled;
+      finished = isNaN(finished) ? 0 : finished;
+
+      console.log(cancelled, finished)
+
+      var data = google.visualization.arrayToDataTable([
+        ['Rents', 'Whole time'],
+        ['Cancelled',     cancelled],
+        ['Finished', Math.max(0, finished - cancelled)],
+      ]);
+
+
+      var options = {
+        pieHole: 0.6,
+        legend: { position: 'bottom', maxLines: 2 },
+        pieSliceText: 'none',
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+      chart.draw(data, options);
+    }
+  </script>
+
+  <script>
 
   function notifyModal(title, icon) {
     Swal.fire({
@@ -92,6 +205,7 @@
   notifyModal("{{.}}", "warning");
   {{end}}
 </script>
+
 
 
 {{end}}

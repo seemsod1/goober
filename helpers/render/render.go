@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -28,8 +29,16 @@ var functions = template.FuncMap{
 	"toLower": func(s string) string {
 		return strings.ToLower(s)
 	},
+	"safeJS": safeJS,
 }
+
 var app *models.AppConfig
+
+func safeJS(s string) template.JS {
+	re := regexp.MustCompile(`\\|'|\r|\n|\t|/|<|>|&`)
+	safe := re.ReplaceAllString(s, "")
+	return template.JS(`"` + safe + `"`)
+}
 
 // NewRenderer sets the config for the template package
 func NewRenderer(a *models.AppConfig) {

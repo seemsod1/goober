@@ -168,8 +168,16 @@ func (m *Repository) ChooseCar(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var car entities.Car
+	result := m.App.DB.First(&car, carId)
+	if result.Error != nil {
+		m.App.Session.Put(r.Context(), "error", "Can't get car from db")
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
 	rent.StatusId = 4
-	rent.FromId = 1
+	rent.FromId = car.LocationId
 	rent.ReturnId = 1
 	rent.PaymentMethod = "none"
 	res := m.App.DB.Create(&rent)
