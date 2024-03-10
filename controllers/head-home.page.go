@@ -43,12 +43,42 @@ func (m *Repository) HeadPage(w http.ResponseWriter, r *http.Request) {
 	res = m.App.DB.Table("cars").Where("location_id = ?", location.ID).Count(&cars)
 
 	data := make(map[string]interface{})
-	data["Rents"] = rentlen
 	data["Revenue"] = revenue
-	data["Cancelled"] = cancelled
-	data["Cars"] = cars
+
+	var carHistories []entities.CarHistory
+	for _, rent := range rents {
+		var cH entities.CarHistory
+		res = m.App.DB.Preload("Car").Preload("Car.Model").Preload("Car.Model.Brand").Table("car_histories").Where("rent_info_id = ?", rent.ID).Find(&cH)
+		if res.Error != nil {
+			continue
+		}
+		carHistories = append(carHistories, cH)
+	}
+
+	brandNum := make(map[string]int)
+	for _, carHistory := range carHistories {
+		brand := carHistory.Car.Model.Brand.Name
+		brandNum[brand]++
+	}
+	receivedMap := make(map[string]int)
+	count := 0
+	for key, value := range brandNum {
+		receivedMap[key] = value
+		count++
+		if count == 5 {
+			break
+		}
+	}
+
+	data["BrandNum"] = receivedMap
+
+	intMap := make(map[string]int)
+	intMap["Rents"] = rentlen
+	intMap["Cars"] = int(cars)
+	intMap["Cancelled"] = cancelled
 
 	render.RenderTemplate(w, r, "head.page.tmpl", &models.TemplateData{
-		Data: data,
+		Data:   data,
+		IntMap: intMap,
 	})
 }

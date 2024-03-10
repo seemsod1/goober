@@ -82,7 +82,7 @@
                         {{with .Form.Errors.Get "plate"}}
                             <label class="text-danger">{{.}}</label>
                         {{end}}
-                        <input type="text" class="form-control {{with .Form.Errors.Get "plate"}} is-invalid {{end}}" id="plate" name="plate" pattern="[A-Za-z]{2}\d{4}[A-Za-z]{2}" placeholder="АA1234AA" required>
+                        <input type="text" class="form-control {{with .Form.Errors.Get "plate"}} is-invalid {{end}}" id="plate" name="plate" pattern="[A-Z]{2}\d{4}[A-Z]{2}" placeholder="АA1234AA" required>
                     </div>
                     <div class="form-group">
                         <label for="SelectColor">Color</label>

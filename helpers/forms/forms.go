@@ -97,7 +97,7 @@ func (f *Form) IsNumber(field string) {
 }
 
 func (f *Form) IsPlate(field string) {
-	pattern := "^[A-Za-z]{2}\\d{4}[A-Za-z]{2}$"
+	pattern := "^[ABEIKMHOPCTXYZ]{2}\\d{4}[ABEIKMHOPCTXYZ]{2}$"
 
 	if match, _ := regexp.MatchString(pattern, f.Get(field)); !match {
 		f.Errors.Add(field, "Invalid plate number")

@@ -49,17 +49,11 @@ func routes() http.Handler {
 	head.Use(RequireAuth)
 	head.Use(NoSurf)
 
-	//TODO: add view car history
 	head.Get("/car-history/{id}", controllers.Repo.CarHistory)
-
-	//TODO: add view cars
 	head.Get("/all-cars", controllers.Repo.AllCars)
-
 	head.Get("/rents-histories", controllers.Repo.RentsHistories)
-
 	head.Get("/add-car-model", controllers.Repo.AddCarModel)
 	head.Post("/add-car-model", controllers.Repo.AddCarModelPost)
-
 	head.Get("/", controllers.Repo.HeadPage)
 	head.Get("/add-car", controllers.Repo.AddCar)
 	head.Get("/get-brands-with-types", controllers.Repo.GetBrandsWithTypes)
@@ -67,6 +61,11 @@ func routes() http.Handler {
 	head.Get("/get-models", controllers.Repo.GetModels)
 	head.Get("/get-types", controllers.Repo.GetTypes)
 	head.Post("/add-car", controllers.Repo.AddCarPost)
+	head.Post("/change-car-price", controllers.Repo.ChangeCarPrice)
+	head.Get("/save-cars-list", controllers.Repo.SaveCarsList)
+	head.Post("/save-cars-list", controllers.Repo.SaveCarsListPost)
+	head.Get("/upload-cars-list", controllers.Repo.UploadCarsList)
+	head.Post("/upload-cars-list", controllers.Repo.UploadCarsListPost)
 
 	mux.Mount("/head", head)
 

@@ -30,6 +30,10 @@ var functions = template.FuncMap{
 		return strings.ToLower(s)
 	},
 	"safeJS": safeJS,
+	"div": func(a, b, c int) float64 {
+		return float64(a) / float64(b) * float64(c)
+	},
+	"GetIntMap": GetIntMap,
 }
 
 var app *models.AppConfig
@@ -38,6 +42,14 @@ func safeJS(s string) template.JS {
 	re := regexp.MustCompile(`\\|'|\r|\n|\t|/|<|>|&`)
 	safe := re.ReplaceAllString(s, "")
 	return template.JS(`"` + safe + `"`)
+}
+func GetIntMap(data map[string]interface{}, key string) map[string]int {
+	if val, ok := data[key]; ok {
+		if intMap, ok := val.(map[string]int); ok {
+			return intMap
+		}
+	}
+	return nil
 }
 
 // NewRenderer sets the config for the template package

@@ -46,10 +46,18 @@ func (m *Repository) AddCarModelPost(w http.ResponseWriter, r *http.Request) {
 	brandId, _ := strconv.Atoi(brand)
 
 	var carModel entities.CarModel
+
+	result := m.App.DB.Where("LOWER(name) = LOWER(?) AND LOWER(brand_id) = LOWER(?)", model, brandId).First(&carModel)
+	if result.Error == nil {
+		m.App.Session.Put(r.Context(), "error", "Car model already exists")
+		http.Redirect(w, r, "/head/", http.StatusSeeOther)
+		return
+	}
+
 	carModel.BrandId = brandId
 	carModel.Name = model
 
-	result := m.App.DB.Create(&carModel)
+	result = m.App.DB.Create(&carModel)
 	if result.Error != nil {
 		http.Error(w, "Failed to save car model", http.StatusInternalServerError)
 		return

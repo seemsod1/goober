@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"help/helpers"
+	"help/helpers/forms"
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
@@ -162,4 +163,59 @@ func (m *Repository) CarHistory(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(responseData)
+}
+
+func (m *Repository) ChangeCarPrice(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Can't parse form", http.StatusBadRequest)
+		return
+	}
+
+	carID := r.Form.Get("carID")
+	newPrice := r.Form.Get("newPrice")
+	form := forms.New(r.PostForm)
+	form.Required("carID", "newPrice")
+	form.IsNumber("newPrice")
+	form.MinNumber("newPrice", 1)
+	form.MaxNumber("newPrice", 10000)
+
+	if !form.Valid() {
+		http.Error(w, "Invalid form", http.StatusBadRequest)
+		return
+	}
+
+	nPriceFloat, err := strconv.ParseFloat(newPrice, 64)
+	if err != nil {
+		http.Error(w, "Invalid price", http.StatusBadRequest)
+		return
+	}
+
+	var car entities.Car
+	res := m.App.DB.Where("id = ?", carID).First(&car)
+	if res.Error != nil {
+		http.Error(w, "Car not found", http.StatusNotFound)
+		return
+	}
+
+	var rentInfos []entities.CarHistory
+	res = m.App.DB.Preload("RentInfo").Preload("RentInfo.Status").Where("car_id = ?", carID).Find(&rentInfos)
+	if res == nil {
+		for _, rent := range rentInfos {
+			if rent.RentInfo.Status.Name == "Processing" {
+				http.Error(w, "Car is used in reservation", http.StatusConflict)
+				return
+			}
+		}
+	}
+
+	car.Price = nPriceFloat
+	res = m.App.DB.Save(&car)
+	if res.Error != nil {
+		http.Error(w, "Failed to save car", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
