@@ -44,7 +44,7 @@ func (m *Repository) UserSingUp(w http.ResponseWriter, r *http.Request) {
 	form.IsName("name")
 
 	if !form.Valid() {
-		render.RenderTemplate(w, r, "signUp.page.tmpl", &models.TemplateData{
+		render.RenderTemplate(w, r, "singUp.page.tmpl", &models.TemplateData{
 			Form: form,
 		})
 		return

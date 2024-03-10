@@ -106,7 +106,8 @@ func (f *Form) IsPlate(field string) {
 }
 
 func (f *Form) IsName(field string) {
-	pattern := "^(?!\\s+$)[a-zA-Zа-яА-Я\\sіІґҐєЄїЇ]+$"
+
+	pattern := "^[a-zA-Zа-яА-ЯіІґҐєЄїЇ]+$"
 
 	if match, _ := regexp.MatchString(pattern, f.Get(field)); !match {
 		f.Errors.Add(field, "Invalid name")

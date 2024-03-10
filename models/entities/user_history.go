@@ -4,7 +4,7 @@ import "time"
 
 type UserHistory struct {
 	UserID     int      `gorm:"primaryKey; autoIncrement:false;not null"`
-	User       User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	User       User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	RentInfoID int      `gorm:"primaryKey; autoIncrement:false;not null"`
 	RentInfo   RentInfo `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	CreatedAt  time.Time

@@ -14,11 +14,11 @@ import (
 	"time"
 )
 
-func (m *Repository) UploadCarsList(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadUploadCarsList(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "head-upload-cars-list.page.tmpl", &models.TemplateData{})
 }
 
-func (m *Repository) UploadCarsListPost(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadUploadCarsListPost(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		http.Error(w, "Can't parse form", http.StatusBadRequest)

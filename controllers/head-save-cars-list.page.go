@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func (m *Repository) SaveCarsList(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadSaveCarsList(w http.ResponseWriter, r *http.Request) {
 	userId := m.App.Session.GetInt(r.Context(), "user_id")
 
 	var location entities.RentLocation
@@ -84,7 +84,7 @@ func (m *Repository) SaveCarsList(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "head-save-cars-list.page.tmpl", &models.TemplateData{})
 }
 
-func (m *Repository) SaveCarsListPost(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadSaveCarsListPost(w http.ResponseWriter, r *http.Request) {
 
 	m.App.Session.Put(r.Context(), "flash", "Successfully saved!")
 	http.Redirect(w, r, "/head/", http.StatusSeeOther)

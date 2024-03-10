@@ -11,13 +11,13 @@ import (
 	"time"
 )
 
-func (m *Repository) AddCar(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadAddCar(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "head-add-car.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 	})
 }
 
-func (m *Repository) GetBrandsWithTypes(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadGetBrandsWithTypes(w http.ResponseWriter, r *http.Request) {
 	var brands []entities.CarBrand
 
 	result := m.App.DB.
@@ -35,7 +35,7 @@ func (m *Repository) GetBrandsWithTypes(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(brands)
 }
 
-func (m *Repository) GetModels(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadGetModels(w http.ResponseWriter, r *http.Request) {
 	brandId := r.URL.Query().Get("brandId")
 	var mod []entities.CarModel
 
@@ -49,7 +49,7 @@ func (m *Repository) GetModels(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(mod)
 }
 
-func (m *Repository) GetTypes(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadGetTypes(w http.ResponseWriter, r *http.Request) {
 	var types []entities.CarType
 
 	result := m.App.DB.Find(&types)
@@ -62,7 +62,7 @@ func (m *Repository) GetTypes(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(types)
 }
 
-func (m *Repository) AddCarPost(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadAddCarPost(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Can't parse form", http.StatusBadRequest)

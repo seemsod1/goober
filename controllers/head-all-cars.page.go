@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func (m *Repository) AllCars(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadAllCars(w http.ResponseWriter, r *http.Request) {
 	userId, _ := m.App.Session.Get(r.Context(), "user_id").(int)
 
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
@@ -115,7 +115,7 @@ func findCar(cars []entities.Car, id int) bool {
 	return false
 }
 
-func (m *Repository) CarHistory(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadCarHistory(w http.ResponseWriter, r *http.Request) {
 
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil || page < 1 {
@@ -165,7 +165,7 @@ func (m *Repository) CarHistory(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(responseData)
 }
 
-func (m *Repository) ChangeCarPrice(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadChangeCarPrice(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {

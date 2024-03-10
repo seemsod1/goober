@@ -15,13 +15,13 @@ import (
 	"strings"
 )
 
-func (m *Repository) AddCarModel(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadAddCarModel(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "head-add-car-model.page.tmpl", &models.TemplateData{
 		Form: forms.New(nil),
 	})
 }
 
-func (m *Repository) AddCarModelPost(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadAddCarModelPost(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(10 << 20)
 	if err != nil {
 		http.Error(w, "Can't parse form", http.StatusBadRequest)
@@ -95,7 +95,7 @@ func (m *Repository) AddCarModelPost(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (m *Repository) GetAllBrands(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadGetAllBrands(w http.ResponseWriter, r *http.Request) {
 	var brands []entities.CarBrand
 
 	result := m.App.DB.Find(&brands)

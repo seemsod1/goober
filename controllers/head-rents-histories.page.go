@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func (m *Repository) RentsHistories(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) HeadRentsHistories(w http.ResponseWriter, r *http.Request) {
 	userId, _ := m.App.Session.Get(r.Context(), "user_id").(int)
 
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
