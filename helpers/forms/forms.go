@@ -132,3 +132,11 @@ func (f Form) MaxNumber(field string, number int) {
 		}
 	}
 }
+
+// IsPasswordMatch checks for matching passwords
+func (f *Form) IsPasswordMatch(field1, field2 string) {
+	if f.Get(field1) != f.Get(field2) {
+		f.Errors.Add(field1, "Passwords do not match")
+		f.Errors.Add(field2, "Passwords do not match")
+	}
+}

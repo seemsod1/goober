@@ -56,14 +56,14 @@
                         <input type="number" min="2" max="6" class="form-control {{with .Form.Errors.Get "inputPassengers"}} is-invalid {{end}}" id="inputPassengers" name="inputPassengers" placeholder="4" required>
                     </div>
                     <div class="form-group">
-                        <label for="year">Year</label>
+                        <label for="year">Year(1950-now)</label>
                         {{with .Form.Errors.Get "year"}}
                             <label class="text-danger">{{.}}</label>
                         {{end}}
                         <input type="number" class="form-control {{with .Form.Errors.Get "year"}} is-invalid {{end}}" id="year" min="1950" max="2024" name="year" placeholder="2020" required>
                     </div>
                     <div class="form-group">
-                        <label>Price</label>
+                        <label>Price(1 - 10000)</label>
                         {{with .Form.Errors.Get "price"}}
                             <label class="text-danger">{{.}}</label>
                         {{end}}

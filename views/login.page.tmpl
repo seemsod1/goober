@@ -45,14 +45,14 @@
                                 {{with .Form.Errors.Get "email"}}
                                     <label class="text-danger">{{.}}</label>
                                 {{end}}
-                                <input type="email" id="email" name="email" min="5" max="100" autocomplete="on" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" placeholder="example@box.com" value="" required>
+                                <input type="email" id="email" name="email" minlength="5" maxlength="100" autocomplete="on" class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" placeholder="example@box.com" value="" required>
                             </div>
                             <div class="form-group mb-3">
                                 <label class="label" for="password">Password</label>
                                 {{with .Form.Errors.Get "password"}}
                                     <label class="text-danger">{{.}}</label>
                                 {{end}}
-                                <input type="password" id="password"  autocomplete="on" min="3" max="100" name="password" class="form-control {{with .Form.Errors.Get "password"}} is-invalid {{end}}" placeholder="Password" value="" required>
+                                <input type="password" id="password"  autocomplete="on" minlength="3" maxlength="100" name="password" class="form-control {{with .Form.Errors.Get "password"}} is-invalid {{end}}" placeholder="Password" value="" required>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign In</button>

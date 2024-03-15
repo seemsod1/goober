@@ -14,5 +14,6 @@ type TemplateData struct {
 	Error     string
 	Form      *forms.Form
 	Role      int
+	Verified  bool
 	Location  string
 }

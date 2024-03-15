@@ -1,0 +1,17 @@
+.digit-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.digit-group input {
+    width: 3em; /* Adjust the width as needed */
+    text-align: center;
+    font-size: 1.5em; /* Adjust the font size as needed */
+    border-radius: 10px; /* Adjust the border-radius for rounded corners */
+    margin: 0 5px; /* Adjust the margin between inputs */
+}
+
+.digit-group .splitter {
+    font-size: 1.5em; /* Adjust the font size for the splitter */
+}

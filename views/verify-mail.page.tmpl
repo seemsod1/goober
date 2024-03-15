@@ -1,0 +1,133 @@
+{{template "base" .}}
+
+
+{{define "css"}}
+    <link rel="stylesheet" href="/resources/css/verify-mail.css">
+{{end}}
+
+
+
+{{define "content"}}
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="row">
+            <div class="col-md-12 text-center">
+
+                <button id="getCodeButton" class="btn btn-dark mt-3">Get code</button>
+                <div class="prompt mb-3">
+                    Enter the code you received in mail to confirm mail!
+                </div>
+
+
+                <form method="post" action="/verify-mail" class="digit-group" data-group-name="digits" data-autosubmit="false" autocomplete="off">
+
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    <input type="text" class="form-control rounded-pill text-center" id="digit-1" name="digit-1" data-next="digit-2" />
+                    <input type="text" class="form-control rounded-pill text-center" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+                    <input type="text" class="form-control rounded-pill text-center" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+                    <span class="splitter">&ndash;</span>
+                    <input type="text" class="form-control rounded-pill text-center" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3" />
+                    <input type="text" class="form-control rounded-pill text-center" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" />
+                    <input type="text" class="form-control rounded-pill text-center" id="digit-6" name="digit-6" data-previous="digit-5" />
+
+
+                    <button type="submit" disabled class="btn btn-dark mt-3">Submit</button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+{{end}}
+
+{{define "js"}}
+    <script>
+
+        function notifyModal(title, icon) {
+            Swal.fire({
+                toast: true,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                position: 'bottom-end',
+                title: title,
+                icon: icon,
+                timer: 3000
+            })
+        }
+
+        $(document).ready(function () {
+            var digitInputs = $('.digit-group').find('input');
+            var submitButton = $('button[type="submit"]');
+
+            digitInputs.each(function() {
+                $(this).attr('maxlength', 1);
+                $(this).on('keyup', function(e) {
+                    var parent = $($(this).parent());
+                    var filledDigits = digitInputs.filter(function() {
+                        return $(this).val().trim() !== '';
+                    });
+
+                    if (filledDigits.length === digitInputs.length) {
+                        submitButton.prop('disabled', false);
+                    } else {
+                        submitButton.prop('disabled', true);
+                    }
+
+                    if(e.keyCode === 8 || e.keyCode === 37) {
+                        var prev = parent.find('input#' + $(this).data('previous'));
+
+                        if(prev.length) {
+                            $(prev).select();
+                        }
+                    } else if((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode === 39) {
+                        var next = parent.find('input#' + $(this).data('next'));
+
+                        if(next.length) {
+                            $(next).select();
+                        } else {
+                            if(parent.data('autosubmit')) {
+                                parent.submit();
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+
+        let csrfToken = "{{.CSRFToken}}";
+        $('#getCodeButton').click(function() {
+            $.ajax({
+                url: '/get-verification-code',
+                type: 'POST',
+                data: {
+                    csrf_token: csrfToken
+                },
+                success: function(data) {
+
+                    Swal.fire({
+                        toast: true,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        position: 'bottom-end',
+                        title: 'Code sent to your mail!',
+                        icon: 'success',
+                        timer: 3000
+                    })
+                },
+                   error: function(error) {
+                       Swal.fire({
+                           toast: true,
+                           showConfirmButton: false,
+                           timerProgressBar: true,
+                           position: 'bottom-end',
+                           title: 'You have already an active code !',
+                           icon: 'error',
+                           timer: 3000
+                       })
+                   }
+                });
+        });
+
+    </script>
+{{end}}
+

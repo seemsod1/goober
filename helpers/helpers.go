@@ -1,5 +1,7 @@
 package helpers
 
+import "crypto/rand"
+
 func CheckPassword(pass string, tocmp string) bool {
 	return pass == tocmp
 }
@@ -24,4 +26,16 @@ func GeneratePageNumbers(currentPage, totalPages int) []int {
 	}
 
 	return pages
+}
+
+var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+
+func GenerateRandomString(length int) string {
+	ll := len(chars)
+	b := make([]byte, length)
+	rand.Read(b)
+	for i := 0; i < length; i++ {
+		b[i] = chars[int(b[i])%ll]
+	}
+	return string(b)
 }

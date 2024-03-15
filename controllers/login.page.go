@@ -64,6 +64,9 @@ func (m *Repository) UserLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	m.App.Session.Put(r.Context(), "user_id", user.ID)
 	m.App.Session.Put(r.Context(), "user_role", user.RoleId)
+	if user.IsVerified == false {
+		m.App.Session.Put(r.Context(), "verified", user.IsVerified)
+	}
 	m.App.Session.Put(r.Context(), "flash", "Successfully logged in!")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

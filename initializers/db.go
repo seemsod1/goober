@@ -35,6 +35,7 @@ func SyncDB(DB *gorm.DB) {
 		&entities.RentInfo{},
 		&entities.UserHistory{},
 		&entities.CarHistory{},
+		&entities.VerificationData{},
 	)
 }
 

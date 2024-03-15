@@ -17,4 +17,5 @@ type AppConfig struct {
 	InProduction  bool
 	Session       *scs.SessionManager
 	Scheduler     gocron.Scheduler
+	MailChan      chan MailData
 }

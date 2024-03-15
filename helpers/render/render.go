@@ -71,6 +71,12 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 		td.Location = location.City.Name + ", " + location.FullAddress
 	}
 
+	if app.Session.Exists(r.Context(), "verified") {
+		td.Verified = app.Session.GetBool(r.Context(), "verified")
+	} else {
+		td.Verified = true
+	}
+
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }

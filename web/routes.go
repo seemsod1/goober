@@ -18,8 +18,21 @@ func routes() http.Handler {
 		mux.Get("/cars", controllers.Repo.CarsPage)
 		mux.Post("/cars", controllers.Repo.CarsPagePost)
 	})
+
+	mux.Group(func(mux chi.Router) {
+		mux.Use(NoSurf)
+		mux.Use(RequireAuth)
+		mux.Get("/verify-mail", controllers.Repo.VerifyMail)
+		mux.Post("/verify-mail", controllers.Repo.VerifyMailPost)
+		mux.Post("/get-verification-code", controllers.Repo.GetVerificationCode)
+
+		mux.Get("/change-password", controllers.Repo.ChangePassword)
+		mux.Post("/change-password", controllers.Repo.ChangePasswordPost)
+	})
+
 	mux.Group(func(mux chi.Router) {
 		mux.Use(RequireAuth)
+		mux.Use(RequireVerified)
 		mux.Use(User)
 		mux.Get("/choose-car/{id}", controllers.Repo.ChooseCar)
 		mux.Get("/make-booking", controllers.Repo.MakeBooking)
@@ -47,6 +60,7 @@ func routes() http.Handler {
 	head.Use(SessionLoad)
 	head.Use(Head)
 	head.Use(RequireAuth)
+	head.Use(RequireVerified)
 	head.Use(NoSurf)
 
 	head.Get("/car-history/{id}", controllers.Repo.HeadCarHistory)
@@ -73,6 +87,7 @@ func routes() http.Handler {
 	admin.Use(SessionLoad)
 	admin.Use(Admin)
 	admin.Use(RequireAuth)
+	admin.Use(RequireVerified)
 	admin.Use(NoSurf)
 	admin.Get("/", controllers.Repo.AdminPage)
 	admin.Get("/all-users", controllers.Repo.AdminAllUsers)

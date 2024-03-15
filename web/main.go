@@ -36,6 +36,11 @@ func main() {
 	gob.Register(entities.UserHistory{})
 	gob.Register(uuid.UUID{})
 
+	app.MailChan = make(chan models.MailData)
+
+	defer close(app.MailChan)
+	listenForMail()
+
 	app.InProduction = false
 
 	session = scs.New()

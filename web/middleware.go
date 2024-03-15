@@ -36,6 +36,17 @@ func RequireAuth(next http.Handler) http.Handler {
 	})
 }
 
+func RequireVerified(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if app.Session.Exists(r.Context(), "verified") && app.Session.GetBool(r.Context(), "verified") == false {
+			app.Session.Put(r.Context(), "error", "You must verify your email at personal cabinet!")
+			http.Redirect(w, r, "/verify-mail", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func User(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if app.Session.Exists(r.Context(), "user_role") && app.Session.GetInt(r.Context(), "user_role") != 3 {

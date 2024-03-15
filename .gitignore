@@ -18,3 +18,5 @@ resources/html
 *.sql
 
 .idea
+
+.env
