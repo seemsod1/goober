@@ -38,6 +38,7 @@
                             </p>
                             <a id="view-history-btn-{{.ID}}" href="#" class="btn btn-dark" onclick="viewHistory('{{.ID}}')">View History</a>
                             <a id="change-car-price-btn-{{.ID}}" href="#" class="btn btn-warning mt-2" onclick="changePrice('{{.ID}}', '{{$csrf}}')">Change price</a>
+                            <a id="change-car-photo-btn-{{.ID}}" href="#" class="btn btn-light btn-outline-dark mt-2" onclick="changePhoto('{{.ID}}', '{{$csrf}}')">Change photo</a>
                         </div>
                     </div>
                 </div>
@@ -275,7 +276,46 @@
             });
         }
 
+        function changePhoto(carID, csrfToken) {
+            Swal.fire({
+                title: 'Change Car Photo',
+                input: 'file',
+                inputAttributes: {
+                    accept: '.png',
+                    'aria-label': 'Upload car picture'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                preConfirm: (file) => {
+                    if (!file) {
+                        Swal.showValidationMessage('Please select a file');
+                    } else {
+                        const formData = new FormData();
+                        formData.append('csrf_token', csrfToken);
+                        formData.append('carID', carID);
+                        formData.append('photo', file);
 
+                        $.ajax({
+                            url: '/head/change-car-photo',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                    location.reload();
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Failed to update price. Please try again.',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
     </script>
 {{end}}

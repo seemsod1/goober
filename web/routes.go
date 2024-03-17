@@ -76,6 +76,7 @@ func routes() http.Handler {
 	head.Get("/get-types", controllers.Repo.HeadGetTypes)
 	head.Post("/add-car", controllers.Repo.HeadAddCarPost)
 	head.Post("/change-car-price", controllers.Repo.HeadChangeCarPrice)
+	head.Post("/change-car-photo", controllers.Repo.HeadChangeCarPhoto)
 	head.Get("/save-cars-list", controllers.Repo.HeadSaveCarsList)
 	head.Post("/save-cars-list", controllers.Repo.HeadSaveCarsListPost)
 	head.Get("/upload-cars-list", controllers.Repo.HeadUploadCarsList)

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/xuri/excelize/v2"
 	"help/helpers/render"
 	models "help/models/app_models"
@@ -9,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"time"
@@ -81,7 +83,8 @@ func (m *Repository) HeadUploadCarsListPost(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	for i, row := range rows {
-
+		var newCar bool
+		newCar = false
 		if i == 0 {
 			col = len(row)
 			continue
@@ -90,33 +93,31 @@ func (m *Repository) HeadUploadCarsListPost(w http.ResponseWriter, r *http.Reque
 			continue
 		}
 
-		if len(row) != col {
+		if len(row)+1 != col {
 			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", invalid number of columns")
 			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
 			return
 		}
 		var car entities.Car
-		carType := row[0]
-		if carType == "" {
+		if row[0] == "" {
 			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", car type can't be empty")
 			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
 			return
 		}
-		exist := m.App.DB.Where("name = ?", carType).First(&car.Type)
+		exist := m.App.DB.Where("name = ?", row[0]).First(&car.Type)
 		if exist.Error != nil {
-			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", car type "+carType+" doesn't exist")
+			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", car type "+row[0]+" doesn't exist")
 			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
 			return
 		}
-		brand := row[1]
-		if brand == "" {
+		if row[1] == "" {
 			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", brand can't be empty")
 			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
 			return
 		}
-		exist = m.App.DB.Where("name = ?", brand).First(&car.Model.Brand)
+		exist = m.App.DB.Where("name = ?", row[1]).First(&car.Model.Brand)
 		if exist.Error != nil {
-			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", car brand "+brand+" doesn't exist")
+			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", car brand "+row[1]+" doesn't exist")
 			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
 			return
 		}
@@ -128,9 +129,7 @@ func (m *Repository) HeadUploadCarsListPost(w http.ResponseWriter, r *http.Reque
 		}
 		exist = m.App.DB.Where("name = ? AND brand_id = ?", model, car.Model.Brand.ID).First(&car.Model)
 		if exist.Error != nil {
-			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", car model "+model+" doesn't exist")
-			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
-			return
+			newCar = true
 		}
 		bags, err := strconv.Atoi(row[3])
 		if err != nil || bags < 1 || bags > 6 {
@@ -203,10 +202,54 @@ func (m *Repository) HeadUploadCarsListPost(w http.ResponseWriter, r *http.Reque
 			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
 			return
 		}
+		//photo
+		axis, err := excelize.CoordinatesToCellName(col, i+1)
+		if err != nil {
+			http.Error(w, "Can't get cell coordinate", http.StatusInternalServerError)
+			return
+		}
+		pics, err := f.GetPictures("cars", axis)
+
+		if err != nil {
+			http.Error(w, "Can't get pictures", http.StatusInternalServerError)
+			return
+		}
+
+		if len(pics) == 0 {
+			m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", photo can't be empty")
+			http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
+			return
+		}
+
+		newFileName := fmt.Sprintf("%s%s", model, ".png")
+
+		filePath := filepath.Join("D:\\golang\\car-rent\\resources\\img\\cars", newFileName)
+
+		if _, err := os.Stat(filePath); err == nil {
+			if err := os.Remove(filePath); err != nil {
+				fmt.Println("Error deleting file:", err)
+			}
+		}
+
+		if err := os.WriteFile(filePath, pics[0].File, 0644); err != nil {
+			fmt.Println("Error saving file:", err)
+		}
+
 		car.Color = color
 		car.LocationId = location.ID
-		car.ModelId = car.Model.ID
 		car.TypeId = car.Type.ID
+		if newCar {
+			var carModel entities.CarModel
+			carModel.BrandId = car.Model.Brand.ID
+			carModel.Name = model
+			if err := m.App.DB.Create(&carModel).Error; err != nil {
+				m.App.Session.Put(r.Context(), "error", "Error at row "+strconv.Itoa(i+1)+", failed to save car model")
+				http.Redirect(w, r, "/head/upload-cars-list", http.StatusSeeOther)
+				return
+			}
+			car.ModelId = carModel.ID
+			car.Model = carModel
+		}
 		cars = append(cars, car)
 		i++
 

@@ -6,6 +6,7 @@ import (
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
+	_ "image/png"
 	"net/http"
 )
 
@@ -35,6 +36,7 @@ func (m *Repository) HeadSaveCarsList(w http.ResponseWriter, r *http.Request) {
 	err = f.SetColWidth(SheetName, "G", "G", 10) // plate
 	err = f.SetColWidth(SheetName, "H", "H", 8)  // price
 	err = f.SetColWidth(SheetName, "I", "I", 10) // color
+	err = f.SetColWidth(SheetName, "J", "J", 30) // color
 
 	style, err := f.NewStyle(&excelize.Style{Font: &excelize.Font{Size: 14, Bold: true}})
 	if err != nil {
@@ -55,7 +57,7 @@ func (m *Repository) HeadSaveCarsList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set header row
-	headerRow := []string{"Type", "Brand", "Model", "Bags", "Passengers", "Year", "Plate", "Price", "Color", "", "", "Types", "Brands", "Models"}
+	headerRow := []string{"Type", "Brand", "Model", "Bags", "Passengers", "Year", "Plate", "Price", "Color", "Photo"}
 	for colIdx, value := range headerRow {
 		cellCoordinate := fmt.Sprintf("%s%d", string('A'+colIdx), 1)
 		err = f.SetCellValue(SheetName, cellCoordinate, value)
@@ -66,6 +68,10 @@ func (m *Repository) HeadSaveCarsList(w http.ResponseWriter, r *http.Request) {
 
 	// Set data rows
 	for rowIdx, car := range cars {
+		if err = f.SetRowHeight(SheetName, rowIdx+2, 100); err != nil {
+			fmt.Println(err)
+		}
+
 		rowData := []interface{}{car.Type.Name, car.Model.Brand.Name, car.Model.Name, car.Bags, car.Passengers, car.Year, car.Plate, car.Price, car.Color}
 		for colIdx, value := range rowData {
 			cellCoordinate := fmt.Sprintf("%s%d", string('A'+colIdx), rowIdx+2)
@@ -73,6 +79,11 @@ func (m *Repository) HeadSaveCarsList(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println(err)
 			}
+		}
+		if err = f.AddPicture(SheetName, fmt.Sprintf("J%d", rowIdx+2), "D:\\golang\\car-rent\\resources\\img\\cars\\"+car.Model.Name+".png", &excelize.GraphicOptions{
+			AutoFit: true,
+		}); err != nil {
+			fmt.Println(err)
 		}
 	}
 

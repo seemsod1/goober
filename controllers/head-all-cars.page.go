@@ -7,8 +7,10 @@ import (
 	"help/helpers/render"
 	models "help/models/app_models"
 	"help/models/entities"
+	"io"
 	"math"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -214,6 +216,52 @@ func (m *Repository) HeadChangeCarPrice(w http.ResponseWriter, r *http.Request) 
 	res = m.App.DB.Save(&car)
 	if res.Error != nil {
 		http.Error(w, "Failed to save car", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (m *Repository) HeadChangeCarPhoto(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Can't parse form", http.StatusBadRequest)
+		return
+	}
+
+	carID := r.Form.Get("carID")
+	form := forms.New(r.PostForm)
+	form.Required("carID")
+	if !form.Valid() {
+		http.Error(w, "Invalid form", http.StatusBadRequest)
+		return
+	}
+
+	file, _, err := r.FormFile("photo")
+	if err != nil {
+		http.Error(w, "Can't get file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	var car entities.Car
+	res := m.App.DB.Preload("Model").Where("id = ?", carID).First(&car)
+	if res.Error != nil {
+		http.Error(w, "Car not found", http.StatusNotFound)
+		return
+	}
+
+	fileName := car.Model.Name + ".png"
+	filePath := "resources/img/cars/" + fileName
+	out, err := os.Create(filePath)
+	if err != nil {
+		http.Error(w, "Can't create file", http.StatusInternalServerError)
+		return
+	}
+	defer out.Close()
+	_, err = io.Copy(out, file)
+	if err != nil {
+		http.Error(w, "Can't copy file", http.StatusInternalServerError)
 		return
 	}
 

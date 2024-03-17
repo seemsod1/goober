@@ -77,6 +77,7 @@ func (f *Form) IsEmail(field string) {
 	}
 }
 
+// IsPhone checks for valid phone number
 func (f *Form) IsPhone(field string) {
 	var validate *validator.Validate
 	validate = validator.New(validator.WithRequiredStructEnabled())
@@ -87,6 +88,7 @@ func (f *Form) IsPhone(field string) {
 
 }
 
+// IsNumber checks for valid number
 func (f *Form) IsNumber(field string) {
 	var validate *validator.Validate
 	validate = validator.New(validator.WithRequiredStructEnabled())
@@ -96,6 +98,7 @@ func (f *Form) IsNumber(field string) {
 	}
 }
 
+// IsPlate checks for valid plate number
 func (f *Form) IsPlate(field string) {
 	pattern := "^[ABEIKMHOPCTXYZ]{2}\\d{4}[ABEIKMHOPCTXYZ]{2}$"
 
@@ -105,6 +108,7 @@ func (f *Form) IsPlate(field string) {
 
 }
 
+// IsName checks for valid name
 func (f *Form) IsName(field string) {
 
 	pattern := "^[a-zA-Zа-яА-ЯіІґҐєЄїЇ]+$"
@@ -115,6 +119,7 @@ func (f *Form) IsName(field string) {
 
 }
 
+// MinNumber checks for minimum number
 func (f Form) MinNumber(field string, number int) {
 	if f.Has(field) {
 		x, _ := strconv.Atoi(f.Get(field))
@@ -124,6 +129,7 @@ func (f Form) MinNumber(field string, number int) {
 	}
 }
 
+// MaxNumber checks for maximum number
 func (f Form) MaxNumber(field string, number int) {
 	if f.Has(field) {
 		x, _ := strconv.Atoi(f.Get(field))

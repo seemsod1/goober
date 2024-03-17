@@ -32,16 +32,19 @@ func (m *Repository) UserSingUp(w http.ResponseWriter, r *http.Request) {
 	phone := r.Form.Get("phone")
 
 	form := forms.New(r.PostForm)
-	form.Required("email", "password", "name", "phone")
+	form.Required("email", "password", "name", "phone", "password-repeat")
 	form.IsEmail("email")
 	form.IsPhone("phone")
 	form.MinLength("email", 5)
 	form.Maxlength("email", 100)
 	form.MinLength("password", 3)
 	form.Maxlength("password", 100)
+	form.MinLength("password-repeat", 3)
+	form.Maxlength("password-repeat", 100)
 	form.MinLength("name", 1)
 	form.Maxlength("name", 60)
 	form.IsName("name")
+	form.IsPasswordMatch("password", "password-repeat")
 
 	if !form.Valid() {
 		render.RenderTemplate(w, r, "singUp.page.tmpl", &models.TemplateData{
