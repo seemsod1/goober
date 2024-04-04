@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"github.com/google/uuid"
-	"help/helpers/render"
-	models "help/models/app_models"
-	"help/models/entities"
+	"github.com/seemsod1/goober/helpers/render"
+	models "github.com/seemsod1/goober/models/app_models"
+	"github.com/seemsod1/goober/models/entities"
 	"net/http"
 )
 
@@ -97,7 +97,6 @@ func (m *Repository) ConfirmBookingPost(w http.ResponseWriter, r *http.Request) 
 	}
 	rent.StatusId = 1
 	m.App.DB.Save(&rent)
-
 	err := m.App.Scheduler.RemoveJob(job)
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Failed to find rent info")

@@ -38,7 +38,7 @@
                             <div style="max-width: 350px;background-color: rgba(0,0,0,0.2);border-radius: initial;padding-top: 15px;padding-bottom: 15px;padding-left: 15px;">
                                 <div>
                                     <h1 class="text-uppercase fw-bold"><span style="color: rgb(255, 255, 255);">10+ cities</span></h1>
-                                    <p class="my-3"><span style="color: rgb(255, 255, 255);">Our company works in more that 10 cities and has more than 5 places to make&nbsp;a rent in each one.</span></p><a class="btn btn-outline-dark btn-lg link-light border rounded-0 me-2" role="button" href="#">Button</a>
+                                    <p class="my-3"><span style="color: rgb(255, 255, 255);">Our company works in more that 10 cities and has more than 5 places to make&nbsp;a rent in each one.</span></p><a class="btn btn-outline-dark btn-lg link-light border rounded-0 me-2" role="button" id="testTrans" href="#">Button</a>
                                 </div>
                             </div>
                         </div>
@@ -219,4 +219,53 @@
             </div>
         </div>
     </div>
+{{end}}
+
+
+{{define "js"}}
+    <script>
+
+        var sendEthButton = document.getElementById('testTrans');
+        sendEthButton.addEventListener('click', function() {
+            const provider = window.ethereum;
+
+            provider.sendAsync({
+                method: 'eth_getTransactionReceipt',
+                params: ['0x80dbaeab3db1942e28ea3e960202cdba616bdbbcdf57a7874e7f3004826ee607'], // Replace with actual transaction hash
+            }, (error, result) => {
+                if (error) {
+                    console.error('Error fetching transaction receipt:', error);
+                } else {
+                    console.log('Transaction receipt:', result);
+                    console.log('Status:', result.result.status);
+                    if (result.result && result.result.status === '0x1') {
+                        console.log('Transaction successful');
+                    } else if (result.result && result.result.status === '0x0') {
+                        console.log('Transaction failed');
+                    } else {
+                        console.log('Transaction pending or status unknown');
+                    }
+                }
+            });
+
+
+            // window.ethereum.request({
+            //     method: 'eth_sendTransaction',
+            //     params :[{
+            //       from: window.ethereum.selectedAddress,
+            //       to: '0x1E1B1eCfA0567B9278A95Def3Cf2b83E03599D00',
+            //         value: '0x38d7ea4c68000',
+            //         gas: '0x8235',
+            //         maxPriorityFeePerGas: '0x3b9aca00',
+            //         maxFeePerGas: '0x2540be400',
+            //     }
+            //     ],
+            // }).then((txHash) => {
+            //     console.log(txHash);
+            // })
+            // .catch((error) => {
+            //     console.error(error);
+            // });
+        });
+    </script>
 {{end}}

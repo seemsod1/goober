@@ -96,6 +96,8 @@
                             <li><a class="dropdown-item" href="/head/">Manager Dashboard</a></li>
                             {{else}}
                             <li><a class="dropdown-item" href="/my-history">My History</a></li>
+                            <li><a class="dropdown-item" href="#" id="paymentsBtn">Payments</a></li>
+
 
                             {{end}}
                             {{if eq .Verified false}}
@@ -116,6 +118,24 @@
             </div>
         </div>
     </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="paymentsModal" tabindex="-1" aria-labelledby="paymentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentsModalLabel">Connect Wallet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-primary" id="connectMetamaskBtn">Connect Metamask Wallet</button>
+                    <p class="fs-5" id="metamask_address">Wallet connected: </p>
+                    <button type="button" class="btn btn-primary" id="disconnectMetamaskBtn">Disconnect</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{block "content" .}}
 
@@ -211,6 +231,120 @@
     {{block "js" .}}
 
     {{end}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.5.2/web3.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var paymentsBtn = document.getElementById('paymentsBtn');
+            var modal = new bootstrap.Modal(document.getElementById('paymentsModal'));
+
+            paymentsBtn.addEventListener('click', function() {
+                modal.show();
+            });
+
+            var connectMetamaskBtn = document.getElementById('connectMetamaskBtn');
+            var disconnectMetamaskBtn = document.getElementById('disconnectMetamaskBtn');
+            var metamaskAddress = document.getElementById('metamask_address');
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.selectedAddress) {
+                // User is connected
+                metamaskAddress.textContent = 'Wallet connected: ' + window.ethereum.selectedAddress;
+                connectMetamaskBtn.style.display = 'none';
+                disconnectMetamaskBtn.style.display = 'block';
+            } else {
+                // User is not connected
+                metamaskAddress.style.display = 'none';
+                connectMetamaskBtn.style.display = 'block';
+                disconnectMetamaskBtn.style.display = 'none';
+            }
+
+            connectMetamaskBtn.addEventListener('click', function() {
+                // Check if Metamask is installed
+                if (typeof window.ethereum !== 'undefined') {
+                    // Request account access if needed
+                    window.ethereum.request({ method: 'eth_requestAccounts' })
+                        .then(function(accounts) {
+                            // Check the current chain ID
+                            window.ethereum.request({ method: 'eth_chainId' })
+                                .then(function(chainId) {
+                                    var decimalChainId = parseInt(chainId, 16);
+                                    if (decimalChainId === 11155111) {
+                                        notifyModal('Metamask wallet connected.', 'success')
+                                    } else {
+                                        notifyModal('Please switch to Scroll Sepolia Testnet.', 'warning')
+                                        window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0xaa36a7' }] })
+                                            .then(function() {
+                                                connectMetamask();
+                                            })
+                                            .catch(function(error) {
+                                                notifyModal('Metamask connection error.', 'error')
+                                            });
+                                    }
+                                })
+                                .catch(function(error) {
+                                    notifyModal('Metamask connection error.', 'error')
+                                });
+                        })
+                        .catch(function(error) {
+                            notifyModal('Metamask connection error.', 'error')
+                        });
+                } else {
+                    notifyModal('Metamask is not installed. Please install Metamask to connect your wallet.', 'warning')
+                }
+            });
+            function connectMetamask() {
+                window.ethereum.request({ method: 'eth_requestAccounts' })
+                    .then(function(accounts) {
+                        notifyModal('Metamask wallet connected.', 'success')
+                    })
+                    .catch(function(error) {
+                        notifyModal('Metamask connection error.', 'error')
+                    });
+            }
+            disconnectMetamaskBtn.addEventListener('click', function() {
+                // Check if MetaMask is installed
+                if (typeof window.ethereum !== 'undefined') {
+                    // Get current permissions
+                    window.ethereum
+                        .request({ method: 'wallet_getPermissions' })
+                        .then(function(permissions) {
+                            if (permissions.length > 0) {
+                                // User has granted permissions, meaning they are connected
+                                // Revoke permissions to disconnect MetaMask
+                                window.ethereum
+                                    .request({
+                                        method: 'wallet_revokePermissions',
+                                        params: [
+                                            {
+                                                eth_accounts: {},
+                                            },
+                                        ],
+                                    })
+                                    .then(function(result) {
+                                        notifyModal('Metamask wallet disconnected.', 'success')
+                                        modal.hide();
+                                        metamaskAddress.style.display = 'none';
+                                        connectMetamaskBtn.style.display = 'block';
+                                        disconnectMetamaskBtn.style.display = 'none';
+                                    })
+                                    .catch(function(error) {
+                                        notifyModal('Error disconnecting Metamask wallet.', 'error')
+                                    });
+                            } else {
+                                notifyModal('Metamask wallet is not connected.', 'warning')
+                            }
+                        })
+                        .catch(function(error) {
+                            notifyModal('Error disconnecting Metamask wallet.', 'error')
+                        });
+                } else {
+                    notifyModal('Metamask is not installed. Please install Metamask to connect your wallet.', 'warning')
+                }
+            });
+        });
+    </script>
+
+
+
+
 
     <script>
         let attention = Prompt();

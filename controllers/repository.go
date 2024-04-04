@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	models "help/models/app_models"
-	"help/models/entities"
+	models "github.com/seemsod1/goober/models/app_models"
+	"github.com/seemsod1/goober/models/entities"
 	"net/http"
 )
 

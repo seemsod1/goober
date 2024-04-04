@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/go-chi/chi/v5"
-	"help/controllers"
+	"github.com/seemsod1/goober/controllers"
 	"net/http"
 )
 
@@ -28,6 +28,8 @@ func routes() http.Handler {
 
 		mux.Get("/change-password", controllers.Repo.ChangePassword)
 		mux.Post("/change-password", controllers.Repo.ChangePasswordPost)
+
+		mux.Post("/connect-metamask", controllers.Repo.PaymentsConnectMetamask)
 	})
 
 	mux.Group(func(mux chi.Router) {

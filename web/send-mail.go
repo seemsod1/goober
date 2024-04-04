@@ -1,8 +1,8 @@
 package main
 
 import (
+	models "github.com/seemsod1/goober/models/app_models"
 	mail "github.com/xhit/go-simple-mail/v2"
-	models "help/models/app_models"
 	"log"
 	"os"
 	"time"

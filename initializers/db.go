@@ -2,9 +2,9 @@ package initializers
 
 import (
 	"fmt"
+	entities "github.com/seemsod1/goober/models/entities"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	entities "help/models/entities"
 	"log"
 	"os"
 	"time"

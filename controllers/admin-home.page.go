@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"help/helpers/render"
-	models "help/models/app_models"
-	"help/models/entities"
+	"github.com/seemsod1/goober/helpers/render"
+	models "github.com/seemsod1/goober/models/app_models"
+	"github.com/seemsod1/goober/models/entities"
 	"net/http"
 )
 

@@ -27,6 +27,8 @@
                         <select class="form-control" id="payment_method" name="payment_method">
                             <option value="creditCard">Credit Card</option>
                             <option value="cash">Cash during receiving</option>
+                            <option disabled value="ethereum" id="cryptoOption">Crypto(ETH)</option>
+
                         </select>
                     </div>
 
@@ -37,4 +39,19 @@
             </div>
         </div>
     </div>
+{{end}}
+
+{{define "js"}}
+<script>
+    function checkMetaMask() {
+        if (typeof window.ethereum !== 'undefined') {
+            document.getElementById('cryptoOption').removeAttribute('disabled');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        checkMetaMask();
+    });
+    </script>
+
 {{end}}

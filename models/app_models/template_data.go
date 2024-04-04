@@ -1,6 +1,6 @@
 package models
 
-import "help/helpers/forms"
+import "github.com/seemsod1/goober/helpers/forms"
 
 // TemplateData holds data sent from handlers to templates
 type TemplateData struct {

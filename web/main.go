@@ -6,11 +6,11 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-co-op/gocron/v2"
 	"github.com/google/uuid"
-	"help/controllers"
-	"help/helpers/render"
-	"help/initializers"
-	models "help/models/app_models"
-	"help/models/entities"
+	"github.com/seemsod1/goober/controllers"
+	"github.com/seemsod1/goober/helpers/render"
+	"github.com/seemsod1/goober/initializers"
+	models "github.com/seemsod1/goober/models/app_models"
+	"github.com/seemsod1/goober/models/entities"
 	"log"
 	"net/http"
 	"os"
@@ -63,7 +63,6 @@ func main() {
 		log.Fatal("cannot create scheduler")
 	}
 	app.Scheduler.Start()
-
 	repo := controllers.NewRepo(&app)
 	controllers.NewControllers(repo)
 	render.NewRenderer(&app)

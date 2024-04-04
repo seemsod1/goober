@@ -1,7 +1,7 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <form action="/confirm-booking" class="needs-validation" method="post">
+    <form action="/confirm-booking" id="bookingForm" method="post">
         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
         <div class="container">
         <div class="row justify-content-center">
@@ -33,4 +33,62 @@
         </div>
     </div>
     </form>
+{{end}}
+
+{{define "js"}}
+    <script>
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('bookingForm').addEventListener('submit', async function (event) {
+                event.preventDefault();
+                const paymentMethod = '{{.Data.Rent.PaymentMethod}}';
+                console.log(paymentMethod);
+                if (paymentMethod === 'ethereum') {
+                    console.log('ethereum transaction');
+                    const rentPrice = {{.Data.Rent.Price}};
+                    const ethPrice = 3333;
+
+                    function calculateEthAmount(rentPrice, ethPrice) {
+                        let num = (BigInt("10") ** BigInt("18")) * BigInt(rentPrice) / BigInt(ethPrice);
+                        return '0x' + num.toString(16);
+                    }
+
+                    try {
+                        let accounts = await getAccount();
+                        console.log(accounts);
+
+                        const txHash = await window.ethereum.request({
+                            method: 'eth_sendTransaction',
+                            params: [{
+                                from: accounts[0],
+                                to: '0x1E1B1eCfA0567B9278A95Def3Cf2b83E03599D00',
+                                value: calculateEthAmount(rentPrice, ethPrice),
+                                gas: '0x8235',
+                                maxPriorityFeePerGas: '0x3b9aca00',
+                                maxFeePerGas: '0x2540be400',
+                            }]
+                        });
+                        console.log(txHash);
+                        notifyModal('Transaction sent successfully. Please wait for confirmation', 'success');
+                        this.submit();
+                    } catch (error) {
+                        console.error(error);
+                        notifyModal('An error occurred while processing your transaction. Please try again', 'error');
+                    }
+                } else {
+                    this.submit();
+                }
+            });
+
+            async function getAccount() {
+                return await window.ethereum.request({ method: "eth_accounts" });
+            }
+
+            function notifyModal(message, type) {
+                // Implement your notification logic here
+                console.log(message, type);
+            }
+        });
+    </script>
 {{end}}
